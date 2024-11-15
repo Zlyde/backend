@@ -15,5 +15,5 @@ COPY . .
 # Exponera port 5000
 EXPOSE 5000
 
-# Startkommando, skriv ut "Hello World" till terminalen
-CMD ["node", "-e", "console.log('Hello World from Backend');"]
+# Startkommando
+CMD ["npm", "run", "devStart"]
