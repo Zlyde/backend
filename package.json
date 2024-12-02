@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "devStart": "nodemon index.js",
+    "start-api": "node api/src/app.js",
+    "devStart-api": "nodemon api/src/app.js",
     "lint": "eslint .",
     "fix": "eslint . --fix",
     "format": "prettier --write ."
