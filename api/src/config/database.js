@@ -14,10 +14,7 @@ const database = {
         }
 
         // Anslut till databasen
-        const client = await mongo.connect(dsn, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        const client = await mongo.connect(dsn);
 
         // Hämta databasinstansen
         const db = await client.db(process.env.DB_NAME);

@@ -10,7 +10,7 @@
 
 const express = require('express');
 const apiRoutes = require('./routes/apiRoutes');
-// const { connectToDatabase } = require('./config/database');
+const { getDb } = require('./config/database');
 
 const app = express();
 
@@ -21,30 +21,35 @@ app.use(express.json()); // För att hantera JSON i förfrågningar
 app.use('/api', apiRoutes); // Bas-URL: /api
 
 // Starta servern
-const PORT = 5001;
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// const PORT = 5001;
+// app.listen(PORT, () => {
+//     console.log(`Server is running on http://localhost:${PORT}`);
+// });
 
 // Starta servern med databas...
-// const startServer = async () => {
-//     try {
-//         // Anslut till databasen
-//         const db = await connectToDatabase();
-//         app.locals.db = db; // Gör databasen tillgänglig för resten av appen
+const startServer = async () => {
+    try {
+        // Anslut till databasen
+        const { db } = await getDb(); // Hämtar databasen
+        console.log('Successfully connected to the database.');
+        app.locals.db = db; // Gör databasen tillgänglig för resten av appen
 
-//         // Koppla rutter
-//         app.use('/api', apiRoutes); // Bas-URL: /api
+        // Koppla rutter
+        app.use('/api', apiRoutes); // Bas-URL: /api
 
-//         // Starta servern
-//         const PORT = 5001;
-//         app.listen(PORT, () => {
-//             console.log(`Server is running on http://localhost:${PORT}`);
-//         });
-//     } catch (error) {
-//         console.error('Failed to start the server:', error);
-//         process.exit(1); // Avsluta om det misslyckas
-//     }
-// };
+        // Starta servern
+        const PORT = 5001;
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+
+    } catch (error) {
+        console.error('Failed to start the server:', error);
+        process.exit(1); // Avsluta om det misslyckas
+    }
+};
+
+// Anropa funktionen för att starta servern
+startServer();
 
 module.exports = app;

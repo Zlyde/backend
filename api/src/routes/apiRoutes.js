@@ -6,9 +6,6 @@
  * Uppgifter: 
  * - Hanterar inkommande HTTP-förfrågningar (GET, POST, PUT, DELETE).
  * - Returnerar svar med korrekta HTTP-statuskoder och JSON-data.
- * 
- * Struktur:
- * - Gruppindelning baserat på resurser (bikes, users, trips).
  */
 
 const express = require('express');
@@ -17,23 +14,27 @@ const router = express.Router();
 // Import av routes
 const bikeRoutes = require('./bikeRoutes');
 const userRoutes = require('./userRoutes');
+const cityRoutes = require('./cityRoutes');
 
 
 // Koppla endpoints till routefil
 router.use('/bike', bikeRoutes);
 router.use('/user', userRoutes);
+router.use('/city', cityRoutes);
 
 
 // Rot-route
 router.get('/', (req, res) => {
-    res.status(200).json({
+    const response = {
         message: "Welcome to the Test API!",
         endpoints: {
             bikes: "/api/bike",
             users: "/api/user",
-            trips: "/api/trip"
-        }
-    });
+            city: "/api/city",
+        },
+    };
+
+    res.status(200).send(JSON.stringify(response, null, 2));
 });
 
 module.exports = router; 

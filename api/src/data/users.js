@@ -1,58 +1,83 @@
 /**
  * src/data/users.js
  * Ansvar:
- * - Abstrahera all interaktion med datakällan (mockdata eller databas) för alla tabeller.
- * 
- * Uppgifter: 
- * - Hanterar datalogik för alla tabeller, inklusive:
- *   - Hämta data.
- *   - Lägga till ny data.
- *   - Uppdatera eller ta bort data (om det behövs senare).
- * - Skapar enhetliga funktioner som används av rutterna.
+ * - Abstrahera all interaktion med datakällan (mockdata eller databas).
  * 
  * Syfte:
  * - Tillhandahåller ett enda lager för datalagring, vilket förenklar hantering och utveckling.
  * - Separera datalagring från API-logiken för att hålla koden modulär och lätt att ändra.
- * 
  */
 
+const User = require('../models/userModel');
 const mockDatabase = require('../models/mockDatabase');
 
-// Hämta alla cyklar
+// För att använda mockdata, lägg till denna rad till .env filen:
+// USE_MOCKDATA=true
+
+// Kontrollera om mockdata ska användas, false by default om inget värde angetts i .env.
+const useMockData = process.env.USE_MOCKDATA === 'true' || false;
+
+// Hämta alla användare
 const getAllUsers = async () => {
-    return mockDatabase.users; // Mockad data
+    if (useMockData) return mockDatabase.users;  // Mockad data
+    const users = await User.find();  // MongoDB
+    if (!users.length) throw new Error('No users found');
+    return users;
 };
 
-// Hämta en specifik cykel
+// Hämta en specifik användare
 const getUserById = async (id) => {
-    const user = mockDatabase.users.find((u) => u.user_id === parseInt(id));
+    if (useMockData) {
+        const user = mockDatabase.users.find((u) => u.user_id === parseInt(id));
+        if (!user) throw new Error('User not found');
+        return user;
+    }
+    const user = await User.findOne({ user_id: id });  // MongoDB
     if (!user) throw new Error('User not found');
     return user;
 };
 
 // Lägg till en ny användare
-const addUser = (user) => {
-    const newUser = {
-        ...user, // Kopiera all inkommande data
-        user_id: mockDatabase.users.length + 1, // Generera ett nytt ID
-    };
-    mockDatabase.users.push(newUser);
-    return newUser;
+const addUser = async (userData) => {
+    if (useMockData) {
+        const newUser = {
+            ...userData, 
+            user_id: mockDatabase.users.length + 1,
+        };
+        mockDatabase.users.push(newUser);
+        return newUser;
+    }
+    const newUser = new User(userData);  // MongoDB
+    return await newUser.save();
 };
 
 // Uppdatera en användare
 const updateUser = async (id, userData) => {
-    const index = mockDatabase.users.findIndex((user) => user.users_id === parseInt(id));
-    if (index === -1) return null;
-    mockDatabase.user[index] = { ...mockDatabase.users[index], ...userData };
-    return mockDatabase.users[index];
+    if (useMockData) {
+        const index = mockDatabase.users.findIndex((user) => user.user_id === parseInt(id));
+        if (index === -1) return null;
+        mockDatabase.users[index] = { ...mockDatabase.users[index], ...userData };
+        return mockDatabase.users[index];
+    }
+    const updatedUser = await User.findOneAndUpdate(
+        { user_id: id },
+        userData,
+        { new: true, runValidators: true }
+    );
+    if (!updatedUser) throw new Error('User not found');
+    return updatedUser;
 };
 
-// Ta bort en cykel
+// Ta bort en användare
 const deleteUser = async (id) => {
-    const index = mockDatabase.users.findIndex((user) => user.user_id === parseInt(id));
-    if (index === -1) return null;
-    return mockDatabase.users.splice(index, 1)[0];
+    if (useMockData) {
+        const index = mockDatabase.users.findIndex((user) => user.user_id === parseInt(id));
+        if (index === -1) return null;
+        return mockDatabase.users.splice(index, 1)[0];
+    }
+    const deletedUser = await User.findOneAndDelete({ user_id: id });
+    if (!deletedUser) throw new Error('User not found');
+    return deletedUser;
 };
 
 module.exports = {

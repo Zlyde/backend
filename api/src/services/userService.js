@@ -14,7 +14,7 @@ const userData = require('../data/users');
 
 // Hämta alla användare
 const getAllUsers = async () => {
-    const users = await bikeData.getAllUsers();
+    const users = await userData.getAllUsers();
     if (users.length === 0) {
         throw new Error('No users found');
     }

@@ -1,18 +1,18 @@
 /**
- * src/routes/userRoutes.js
+ * src/routes/cityRoutes.js
  * Ansvar:
- * - Definiera API-logiken för användare och koppla samman med service layer.
+ * - Definiera API-logiken för städer och koppla samman med service layer.
  */
 
 const express = require('express');
 const router = express.Router();
-const userService = require('../services/userService');
+const cityService = require('../services/cityService');
 
 // GET: Hämta alla användare
 router.get('/', async (req, res) => {
     try {
-        const users = await userService.getAllUsers();
-        res.status(200).json(users);
+        const city = await cityService.getAllCities();
+        res.status(200).json(cities);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -21,8 +21,8 @@ router.get('/', async (req, res) => {
 // GET: Hämta en specifik användare
 router.get('/:id', async (req, res) => {
     try {
-        const user = await userService.getUserById(req.params.id);
-        res.status(200).json(user);
+        const city = await cityService.getCityById(req.params.id);
+        res.status(200).json(city);
     } catch (err) {
         res.status(404).json({ error: err.message });
     }
@@ -31,8 +31,8 @@ router.get('/:id', async (req, res) => {
 // POST: Lägg till en ny användare
 router.post('/', async (req, res) => {
     try {
-        const newUser = await userService.addUser(req.body);
-        res.status(201).json(newUser);
+        const newCity = await cityService.addCity(req.body);
+        res.status(201).json(newCity);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -41,11 +41,11 @@ router.post('/', async (req, res) => {
 // PUT: Uppdatera en användare
 router.put('/:id', async (req, res) => {
     try {
-        const updatedUser = await userService.updateUser(req.params.id, req.body);
-        if (!updatedUser) {
-            return res.status(404).json({ error: 'User not found' });
+        const updatedCity = await cityService.updateCity(req.params.id, req.body);
+        if (!updatedCity) {
+            return res.status(404).json({ error: 'City not found' });
         }
-        res.status(200).json(updatedUser);
+        res.status(200).json(updatedCity);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -54,11 +54,11 @@ router.put('/:id', async (req, res) => {
 // DELETE: Ta bort en användare
 router.delete('/:id', async (req, res) => {
     try {
-        const deletedUser = await userService.deleteUser(req.params.id);
-        if (!deletedUser) {
-            return res.status(404).json({ error: 'User not found' });
+        const deletedCity = await cityService.deleteCity(req.params.id);
+        if (!deletedCity) {
+            return res.status(404).json({ error: 'City not found' });
         }
-        res.status(200).json(deletedUser);
+        res.status(200).json(deletedCity);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
