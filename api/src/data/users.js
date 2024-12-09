@@ -19,8 +19,13 @@ const useMockData = process.env.USE_MOCKDATA === 'true' || false;
 
 // Hämta alla användare
 const getAllUsers = async () => {
-    if (useMockData) return mockDatabase.users;  // Mockad data
-    const users = await User.find();  // MongoDB
+    if (useMockData) {
+        console.log("Använder mockdata för användare.");
+        return mockDatabase.users;  
+    }
+    console.log("Hämtar användare från databasen...");
+    const users = await User.find(); 
+    console.log("Resultat:", users);
     if (!users.length) throw new Error('No users found');
     return users;
 };
@@ -32,7 +37,7 @@ const getUserById = async (id) => {
         if (!user) throw new Error('User not found');
         return user;
     }
-    const user = await User.findOne({ user_id: id });  // MongoDB
+    const user = await User.findOne({ user_id: id });
     if (!user) throw new Error('User not found');
     return user;
 };
@@ -47,7 +52,7 @@ const addUser = async (userData) => {
         mockDatabase.users.push(newUser);
         return newUser;
     }
-    const newUser = new User(userData);  // MongoDB
+    const newUser = new User(userData);
     return await newUser.save();
 };
 

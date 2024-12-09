@@ -30,9 +30,8 @@ app.use('/api', apiRoutes); // Bas-URL: /api
 const startServer = async () => {
     try {
         // Anslut till databasen
-        const { db } = await getDb(); // Hämtar databasen
+        await getDb(); // Hämtar databasen
         console.log('Successfully connected to the database.');
-        app.locals.db = db; // Gör databasen tillgänglig för resten av appen
 
         // Koppla rutter
         app.use('/api', apiRoutes); // Bas-URL: /api

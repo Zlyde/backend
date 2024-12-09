@@ -1,34 +1,23 @@
 // src/config/database.js
 
-const mongo = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
 require('dotenv').config(); // Laddar miljövariabler från .env-filen
 
-const database = {
-    getDb: async function getDb(collectionName) {
-        // DSN för MongoDB Atlas
-        let dsn = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@${process.env.CLUSTER_URL}/?retryWrites=true&w=majority&appName=${process.env.APP_NAME}`;
+const getDb = async () => {
+    // DSN för MongoDB Atlas
+    const dsn = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@${process.env.CLUSTER_URL}/?retryWrites=true&w=majority&appName=${process.env.APP_NAME}`;
 
-        // Om NODE_ENV är 'test', använd lokal testdatabas
-        if (process.env.NODE_ENV === 'test') {
-            dsn = 'mongodb://localhost:27017/test';
-        }
+    try {
+        // Anslut till databasen med Mongoose
+        await mongoose.connect(dsn, {
+            dbName: process.env.DB_NAME,
+        });
 
-        // Anslut till databasen
-        const client = await mongo.connect(dsn);
-
-        // Hämta databasinstansen
-        const db = await client.db(process.env.DB_NAME);
-
-        // Hämta specifik collection om angiven
-        const collection = collectionName ? await db.collection(collectionName) : null;
-
-        // Returnera databas, collection och klient
-        return {
-            db: db,
-            collection: collection,
-            client: client,
-        };
-    },
+        console.log('Successfully connected to the database.');
+    } catch (error) {
+        console.error("Failed to connect to the database:", error);
+        process.exit(1); // Avsluta vid fel
+    }
 };
 
-module.exports = database;
+module.exports = { getDb };
