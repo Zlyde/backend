@@ -13,6 +13,17 @@ const getDb = async () => {
             dbName: process.env.DB_NAME,
         });
 
+        // const City = mongoose.model('City');
+        // console.log(City.schema) // Assuming you already have this model defined
+
+        // City.collection.dropIndex('city_id_1', (err, result) => {
+        //   if (err) {
+        //     console.log('Error dropping index:', err);
+        //   } else {
+        //     console.log('Index dropped successfully:', result);
+        //   }
+        // });
+
         console.log('Successfully connected to the database.');
     } catch (error) {
         console.error("Failed to connect to the database:", error);
