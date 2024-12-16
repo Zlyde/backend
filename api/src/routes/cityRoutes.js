@@ -19,13 +19,31 @@ router.get('/', async (req, res) => {
 });
 
 // GET: Hämta en specifik användare
-router.get('/:id', async (req, res) => {
-    try {
-        const city = await cityService.getCityById(req.params.id);
-        res.status(200).json(city);
-    } catch (err) {
-        res.status(404).json({ error: err.message });
+// router.get('/:id', async (req, res) => {
+//     try {
+//         const city = await cityService.getCityById(req.params.id);
+//         res.status(200).json(city);
+//     } catch (err) {
+//         res.status(404).json({ error: err.message });
+//     }
+// });
+
+// GET: Hämta en specifik användare
+router.get('/:query', async (req, res) => {
+  try {
+    const getQuery = req.params.query
+    const isNum = !isNaN(getQuery)
+    let query
+    if (isNum) {
+      query = {city_id: Number(getQuery)}
+    } else {
+      query = { name: getQuery }
     }
+    const city = await cityService.getCityByQuery(query);
+    res.status(200).json(city);
+  } catch (err) {
+      res.status(404).json({ error: err.message });
+  }
 });
 
 // POST: Lägg till en ny användare

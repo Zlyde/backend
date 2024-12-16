@@ -21,11 +21,6 @@ const useMockData = process.env.USE_MOCKDATA === 'true' || false;
 
 // Hämta alla städer
 const getAllCities = async () => {
-    if (useMockData) {
-      console.log("Använder mockdata för användare.");
-      return mockDatabase.users;  
-    }
-
     const cities = await City.find()
     console.log("Result", cities)
     if (!cities) throw new Error("Faild to fetch cities")
@@ -34,26 +29,20 @@ const getAllCities = async () => {
 
 // Hämta en specifik stad
 const getCityById = async (id) => {
-    if (useMockData){
-      const city = mockDatabase.cities.find((c) => c.city_id === parseInt(id));
-      if (!city) throw new Error('City not found');
-      return city;
-    }
 
     const city = await City.findById(id)
     return city
 };
 
+// Hämta en specifik stad
+const getCityByQuery = async (query) => {
+
+  const city = await City.findOne(query)
+  return city
+};
+
 // Lägg till en ny stad
 const addCity = async (city) => {
-    if (useMockData){
-        const newCity = {
-          ...city, // Kopiera all inkommande data
-          city_id: mockDatabase.cities.length + 1, // Generera ett nytt ID
-      };
-      mockDatabase.cities.push(newCity); // Lägg till staden i databasen
-      return newCity;
-    }
 
     const newCity = new City(city)
     console.log('Added city', newCity)
@@ -62,23 +51,25 @@ const addCity = async (city) => {
 
 // Uppdatera en stad
 const updateCity = async (id, cityData) => {
-    const index = mockDatabase.cities.findIndex((city) => city.city_id === parseInt(id));
-    if (index === -1) return null;
-    mockDatabase.cities[index] = { ...mockDatabase.cities[index], ...cityData };
-    return mockDatabase.cities[index];
+    const updatedCity = await City.findOneAndUpdate(
+        { city_id: id },
+        cityData,
+        { new: true, runValidators: true }
+    );
+    if (!updatedCity) throw new Error('User not found');
+    return updatedCity;
 };
 
 // Ta bort en stad
 const deleteCity = async (id) => {
-    if (useMockData){
-      const index = mockDatabase.cities.findIndex((city) => city.city_id === parseInt(id));
-      if (index === -1) return null;
-      return mockDatabase.cities.splice(index, 1)[0];
-    }
+    const deletedCity = await City.findOneAndDelete({ city_id: id });
+    if (!deletedCity) throw new Error('User not found');
+    console.log(`City has been remove`)
+    return deletedCity;
 
-    await City.deleteOne({ _id: id })
-    console.log(`City ${id} has been remove`)
-    return `City ${id} has been remove`
+    // await City.deleteOne({ _id: id })
+    // console.log(`City ${id} has been remove`)
+    // return `City ${id} has been remove`
 };
 
 module.exports = {
@@ -86,5 +77,6 @@ module.exports = {
     getCityById,
     addCity,
     updateCity,
-    deleteCity
+    deleteCity,
+    getCityByQuery
 };

@@ -30,6 +30,14 @@ const getCityById = async (id) => {
     return city;
 };
 
+const getCityByQuery = async (query) => {
+  const city = await cityData.getCityByQuery(query);
+  if (!city) {
+      throw new Error('City not found');
+  }
+  return city;
+};
+
 // Lägg till en ny stad
 const addCity = async (city) => {
     return await cityData.addCity(city);
@@ -59,5 +67,6 @@ module.exports = {
     getCityById,
     addCity,
     updateCity,
-    deleteCity
+    deleteCity,
+    getCityByQuery
 };
