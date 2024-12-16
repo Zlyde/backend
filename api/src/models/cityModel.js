@@ -3,7 +3,8 @@ const autoIncrement = require('mongoose-sequence')(mongoose)
 
 const citySchema = new mongoose.Schema({
   city_id: {
-    type: Number
+    type: Number,
+    index: true
   },
   name: {
     type: String,
