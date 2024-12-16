@@ -1,57 +1,45 @@
 /**
  * src/data/bikes.js
- * Ansvar:
- * - Abstrahera all interaktion med datakällan (mockdata eller databas) för alla tabeller.
- * 
- * Uppgifter: 
- * - Hanterar datalogik för alla tabeller, inklusive:
- *   - Hämta data.
- *   - Lägga till ny data.
- *   - Uppdatera eller ta bort data (om det behövs senare).
- * - Skapar enhetliga funktioner som används av rutterna.
- * 
- * Syfte:
- * - Tillhandahåller ett enda lager för datalagring, vilket förenklar hantering och utveckling.
- * - Separera datalagring från API-logiken för att hålla koden modulär och lätt att ändra.
  */
 
-const mockDatabase = require('../models/mockDatabase');
+const Bike = require('../models/bikeModel');
 
 // Hämta alla cyklar
 const getAllBikes = async () => {
-    return mockDatabase.bikes; // Mockad data
+    const bikes = await Bike.find();
+    if (!bikes.length) throw new Error('No bikes found');
+    return bikes;
 };
 
-// Hämta en specifik cykel
+// Hämta en specifik cykel baserat på bike_id
 const getBikeById = async (id) => {
-    const bike = mockDatabase.bikes.find((b) => b.bike_id === parseInt(id));
+    const bike = await Bike.findOne({ bike_id: id });
     if (!bike) throw new Error('Bike not found');
     return bike;
 };
 
 // Lägg till en ny cykel
-const addBike = (bike) => {
-    const newBike = {
-        ...bike, // Kopiera all inkommande data
-        bike_id: mockDatabase.bikes.length + 1, // Generera ett nytt ID
-    };
-    mockDatabase.bikes.push(newBike); // Lägg till cykeln i databasen
-    return newBike;
+const addBike = async (bikeData) => {
+    const newBike = new Bike(bikeData);
+    return await newBike.save();
 };
 
 // Uppdatera en cykel
 const updateBike = async (id, bikeData) => {
-    const index = mockDatabase.bikes.findIndex((bike) => bike.bike_id === parseInt(id));
-    if (index === -1) return null;
-    mockDatabase.bikes[index] = { ...mockDatabase.bikes[index], ...bikeData };
-    return mockDatabase.bikes[index];
+    const updatedBike = await Bike.findOneAndUpdate(
+        { bike_id: id },
+        bikeData,
+        { new: true, runValidators: true }
+    );
+    if (!updatedBike) throw new Error('Bike not found');
+    return updatedBike;
 };
 
 // Ta bort en cykel
 const deleteBike = async (id) => {
-    const index = mockDatabase.bikes.findIndex((bike) => bike.bike_id === parseInt(id));
-    if (index === -1) return null;
-    return mockDatabase.bikes.splice(index, 1)[0];
+    const deletedBike = await Bike.findOneAndDelete({ bike_id: id });
+    if (!deletedBike) throw new Error('Bike not found');
+    return deletedBike;
 };
 
 module.exports = {
