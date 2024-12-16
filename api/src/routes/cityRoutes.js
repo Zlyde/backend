@@ -12,7 +12,7 @@ const cityService = require('../services/cityService');
 router.get('/', async (req, res) => {
     try {
         const city = await cityService.getAllCities();
-        res.status(200).json(cities);
+        res.status(200).json(city);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

@@ -11,11 +11,13 @@
 const express = require('express');
 const apiRoutes = require('./routes/apiRoutes');
 const { getDb } = require('./config/database');
+const cors = require('cors')
 
 const app = express();
 
 // Middleware
 app.use(express.json()); // För att hantera JSON i förfrågningar
+app.use(cors())
 
 // Koppla rutter
 app.use('/api', apiRoutes); // Bas-URL: /api
