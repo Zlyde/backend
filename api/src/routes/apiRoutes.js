@@ -13,14 +13,19 @@ const router = express.Router();
 
 // Import av routes
 const bikeRoutes = require('./bikeRoutes');
-const userRoutes = require('./userRoutes');
 const cityRoutes = require('./cityRoutes');
-
+const stationRoutes = require('./stationRoutes');
+const tripRoutes = require('./tripRoutes');
+const userRoutes = require('./userRoutes');
+const zoneRoutes = require('./zoneRoutes');
 
 // Koppla endpoints till routefil
 router.use('/bike', bikeRoutes);
-router.use('/user', userRoutes);
 router.use('/city', cityRoutes);
+router.use('/station', stationRoutes);
+router.use('/trip', tripRoutes);
+router.use('/user', userRoutes);
+router.use('/zone', zoneRoutes);
 
 
 // Rot-route
@@ -29,8 +34,11 @@ router.get('/', (req, res) => {
         message: "Welcome to the Test API!",
         endpoints: {
             bikes: "/api/bike",
-            users: "/api/user",
             city: "/api/city",
+            stations: "/api/station",
+            trips: "/api/trip",
+            zones: "/api/zone",
+            users: "/api/user",
         },
     };
 
