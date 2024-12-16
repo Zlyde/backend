@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-sequence')(mongoose)
 
 const citySchema = new mongoose.Schema({
+  city_id: {
+    type: Number
+  },
   name: {
     type: String,
     required: true,
@@ -11,28 +15,26 @@ const citySchema = new mongoose.Schema({
       type: String,
       enum: ['Point'],
       default: 'Point',
-      required: true
     },
     coordinates: {
       type: [Number],
-      required: true
     }
   },
   boundary: {
     type: {
       type: String,
       enum: ['Polygon', 'MultiPolygon'],
-      required: true
     },
     coordinates: {
       type: [[[Number]]],
-      required: true
     }
   },
   color: {
     type: String,
   }
-});
+}, {timestamps: true});
+
+citySchema.plugin(autoIncrement, {inc_field: 'city_id'})
 
 citySchema.index({ position: '2dsphere' })
 citySchema.index({ boundary: '2dsphere' })

@@ -30,6 +30,7 @@
     "express": "^4.21.1",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.1",
+    "mongoose-sequence": "^6.0.1",
     "passport": "^0.7.0",
     "passport-github": "^1.1.0"
   }
