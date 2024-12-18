@@ -7,17 +7,22 @@
  * - Upprätta en anslutning till databasen.
  * - Lyssna på en specifik port.
  */
-
+require('dotenv').config()
 const express = require('express');
 const apiRoutes = require('./routes/apiRoutes');
 const { getDb } = require('./config/database');
 const cors = require('cors')
+const passport = require('passport')
 
 const app = express();
 
 // Middleware
 app.use(express.json()); // För att hantera JSON i förfrågningar
-app.use(cors())
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}))
+app.use(passport.initialize())
 
 // Koppla rutter
 app.use('/api', apiRoutes); // Bas-URL: /api

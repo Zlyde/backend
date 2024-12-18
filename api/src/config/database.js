@@ -13,10 +13,9 @@ const getDb = async () => {
             dbName: process.env.DB_NAME,
         });
 
-        // const City = mongoose.model('City');
-        // console.log(City.schema) // Assuming you already have this model defined
-
-        // City.collection.dropIndex('city_id_1', (err, result) => {
+        // const City = mongoose.model('User');
+    
+        // City.collection.dropIndex('user_id_1', (err, result) => {
         //   if (err) {
         //     console.log('Error dropping index:', err);
         //   } else {

@@ -10,8 +10,10 @@
 
 const express = require('express');
 const router = express.Router();
+const middleware = require('../middleware/auth')
 
 // Import av routes
+const authRoutes = require('./authRoutes')
 const bikeRoutes = require('./bikeRoutes');
 const cityRoutes = require('./cityRoutes');
 const stationRoutes = require('./stationRoutes');
@@ -20,6 +22,7 @@ const userRoutes = require('./userRoutes');
 const zoneRoutes = require('./zoneRoutes');
 
 // Koppla endpoints till routefil
+router.use('/auth', authRoutes)
 router.use('/bike', bikeRoutes);
 router.use('/city', cityRoutes);
 router.use('/station', stationRoutes);
@@ -33,6 +36,7 @@ router.get('/', (req, res) => {
     const response = {
         message: "Welcome to the Test API!",
         endpoints: {
+            auth: "/api/auth",
             bikes: "/api/bike",
             city: "/api/city",
             stations: "/api/station",
