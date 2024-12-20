@@ -22,7 +22,7 @@ const useMockData = process.env.USE_MOCKDATA === 'true' || false;
 // Hämta alla städer
 const getAllCities = async () => {
     const cities = await City.find()
-    console.log("Result", cities)
+    // console.log("Result", cities)
     if (!cities) throw new Error("Faild to fetch cities")
     return cities
 };

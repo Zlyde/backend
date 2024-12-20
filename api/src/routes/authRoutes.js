@@ -14,9 +14,9 @@ router.post('/login', (req, res) => {
   auth.login(req, res)
 })
 
-router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }))
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }))
 router.get(
-  '/auth/github/callback',
+  '/github/callback',
   passport.authenticate('github', { failureRedirect: '/login', session: false }),
   async (req, res) => {
     const { user, token } = req.user;

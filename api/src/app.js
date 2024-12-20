@@ -13,7 +13,7 @@ const apiRoutes = require('./routes/apiRoutes');
 const { getDb } = require('./config/database');
 const cors = require('cors')
 const passport = require('passport')
-
+require('./passport')
 const app = express();
 
 // Middleware
