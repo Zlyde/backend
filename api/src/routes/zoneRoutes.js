@@ -1,10 +1,12 @@
 /**
- * src/routes/parkingZoneRoutes.js
+ * src/routes/zoneRoutes.js
  */
 
 const express = require('express');
 const router = express.Router();
 const parkingZoneService = require('../services/zoneService');
+const geoService = require('../services/geoService');
+
 
 // GET: Hämta alla parkeringszoner
 router.get('/', async (req, res) => {
@@ -26,26 +28,26 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST: Lägg till en ny parkeringszon
-router.post('/', async (req, res) => {
-    try {
-        const newZone = await parkingZoneService.addParkingZone(req.body);
-        res.status(201).json(newZone);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
+// // POST: Lägg till en ny parkeringszon
+// router.post('/', async (req, res) => {
+//     try {
+//         const newZone = await parkingZoneService.addParkingZone(req.body);
+//         res.status(201).json(newZone);
+//     } catch (err) {
+//         res.status(400).json({ error: err.message });
+//     }
+// });
 
-// PUT: Uppdatera en parkeringszon
-router.put('/:id', async (req, res) => {
-    try {
-        const updatedZone = await parkingZoneService.updateParkingZone(req.params.id, req.body);
-        if (!updatedZone) return res.status(404).json({ error: 'Parking zone not found' });
-        res.status(200).json(updatedZone);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
+// // PUT: Uppdatera en parkeringszon
+// router.put('/:id', async (req, res) => {
+//     try {
+//         const updatedZone = await parkingZoneService.updateParkingZone(req.params.id, req.body);
+//         if (!updatedZone) return res.status(404).json({ error: 'Parking zone not found' });
+//         res.status(200).json(updatedZone);
+//     } catch (err) {
+//         res.status(400).json({ error: err.message });
+//     }
+// });
 
 // DELETE: Ta bort en parkeringszon
 router.delete('/:id', async (req, res) => {
@@ -58,13 +60,13 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// GET: Hämta alla cyklar vid en specifik parkeringszon
+// GET: Hämta cyklar i en viss parkerings-zon
 router.get('/:id/bikes', async (req, res) => {
     try {
-        const bikes = await parkingZoneService.getBikesAtParkingZone(req.params.id);
+        const bikes = await geoService.getBikesInParkingZone(req.params.id);
         res.status(200).json(bikes);
-    } catch (err) {
-        res.status(404).json({ error: err.message });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 });
 

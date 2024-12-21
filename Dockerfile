@@ -5,8 +5,10 @@ FROM node:18
 # Sätt arbetskatalog
 WORKDIR /app
 
-# Kopiera package.json och installera beroenden
+# Kopiera package.json
 COPY package*.json ./
+
+# Installera beroenden
 RUN npm install
 
 # Kopiera all övrig kod

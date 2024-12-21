@@ -1,12 +1,11 @@
 /**
- * src/routes/chargingStationRoutes.js
- * Ansvar:
- * - Definiera API-logiken för laddstationer och koppla samman med service layer.
+ * src/routes/stationRoutes.js
  */
 
 const express = require('express');
 const router = express.Router();
 const chargingStationService = require('../services/stationService');
+const geoService = require('../services/geoService');
 
 // GET: Hämta alla laddstationer
 router.get('/', async (req, res) => {
@@ -28,15 +27,15 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST: Lägg till en ny laddstation
-router.post('/', async (req, res) => {
-    try {
-        const newStation = await chargingStationService.addChargingStation(req.body);
-        res.status(201).json(newStation);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
+// // POST: Lägg till en ny laddstation
+// router.post('/', async (req, res) => {
+//     try {
+//         const newStation = await chargingStationService.addChargingStation(req.body);
+//         res.status(201).json(newStation);
+//     } catch (err) {
+//         res.status(400).json({ error: err.message });
+//     }
+// });
 
 // PUT: Uppdatera en laddstation
 router.put('/:id', async (req, res) => {
@@ -58,13 +57,13 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// GET: Hämta cyklar på en laddstation
+// GET: Hämta alla cyklar på en specifik laddstation
 router.get('/:id/bikes', async (req, res) => {
     try {
-        const bikes = await chargingStationService.getBikesAtChargingStation(req.params.id);
+        const bikes = await geoService.getBikesInChargingStation(req.params.id);
         res.status(200).json(bikes);
-    } catch (err) {
-        res.status(404).json({ error: err.message });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 });
 

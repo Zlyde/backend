@@ -1,7 +1,5 @@
 /**
  * src/routes/bikeRoutes.js
- * Ansvar:
- * - Definiera API-logiken för cyklar och koppla samman med service layer.
  */
 
 const express = require('express');

@@ -1,14 +1,13 @@
 /**
  * src/routes/cityRoutes.js
- * Ansvar:
- * - Definiera API-logiken för städer och koppla samman med service layer.
  */
 
 const express = require('express');
 const router = express.Router();
+const geoService = require('../services/geoService');
 const cityService = require('../services/cityService');
 
-// GET: Hämta alla användare
+// GET: Hämta alla städer
 router.get('/', async (req, res) => {
     try {
         const city = await cityService.getAllCities();
@@ -18,17 +17,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET: Hämta en specifik användare
-// router.get('/:id', async (req, res) => {
-//     try {
-//         const city = await cityService.getCityById(req.params.id);
-//         res.status(200).json(city);
-//     } catch (err) {
-//         res.status(404).json({ error: err.message });
-//     }
-// });
-
-// GET: Hämta en specifik användare
+// GET: Hämta en specifik stad
 router.get('/:query', async (req, res) => {
   try {
     const getQuery = req.params.query
@@ -46,17 +35,17 @@ router.get('/:query', async (req, res) => {
   }
 });
 
-// POST: Lägg till en ny användare
-router.post('/', async (req, res) => {
-    try {
-        const newCity = await cityService.addCity(req.body);
-        res.status(201).json(newCity);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
+// // POST: Lägg till en ny stad
+// router.post('/', async (req, res) => {
+//     try {
+//         const newCity = await cityService.addCity(req.body);
+//         res.status(201).json(newCity);
+//     } catch (err) {
+//         res.status(400).json({ error: err.message });
+//     }
+// });
 
-// PUT: Uppdatera en användare
+// PUT: Uppdatera en stad
 router.put('/:id', async (req, res) => {
     try {
         const updatedCity = await cityService.updateCity(req.params.id, req.body);
@@ -69,7 +58,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// DELETE: Ta bort en användare
+// DELETE: Ta bort en stad
 router.delete('/:id', async (req, res) => {
     try {
         const deletedCity = await cityService.deleteCity(req.params.id);
@@ -79,6 +68,34 @@ router.delete('/:id', async (req, res) => {
         res.status(200).json(deletedCity);
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+});
+
+// GET: Hämta alla cyklar inom en viss stad
+router.get('/:id/bikes', async (req, res) => {
+    const cityId = req.params.id;
+
+    try {
+        // Hämta staden baserat på ID
+        const city = await City.findOne({ city_id: cityId });
+        if (!city) {
+            return res.status(404).json({ error: `City with ID ${cityId} not found` });
+        }
+
+        if (!city.boundary) {
+            return res.status(400).json({ error: 'City boundary is not defined' });
+        }
+
+        // Hämta cyklar inom stadens boundary
+        const bikes = await geoService.getBikesWithinArea(city.boundary);
+        if (!bikes || bikes.length === 0) {
+            return res.status(404).json({ error: `No bikes found in city with ID ${cityId}` });
+        }
+
+        res.status(200).json({ bikes });
+    } catch (error) {
+        console.error(`Error fetching bikes for city with ID ${cityId}:`, error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

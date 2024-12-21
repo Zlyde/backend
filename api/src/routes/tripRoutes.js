@@ -1,7 +1,5 @@
 /**
  * src/routes/tripRoutes.js
- * Ansvar:
- * - Definiera API-logiken för resor och koppla samman med service-lagret.
  */
 
 const express = require('express');

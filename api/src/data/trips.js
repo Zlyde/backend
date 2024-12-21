@@ -1,7 +1,5 @@
 /**
  * src/data/trips.js
- * Ansvar:
- * - Abstrahera all interaktion med datakällan (MongoDB).
  */
 
 const Trip = require('../models/tripModel');
@@ -10,13 +8,10 @@ const Trip = require('../models/tripModel');
 const getAllTrips = async () => {
     try {
         const trips = await Trip.find();
-        if (!trips || trips.length === 0) {
-            throw new Error('No trips found');
-        }
         return trips;
     } catch (error) {
-        console.error("Fel vid hämtning av resor:", error.message);
-        throw error;
+        console.error("Error fetching trips:", error.message);
+        throw new Error(error.message);
     }
 };
 
@@ -24,29 +19,39 @@ const getAllTrips = async () => {
 const getTripById = async (tripId) => {
     try {
         const trip = await Trip.findOne({ trip_id: tripId });
-        if (!trip) throw new Error('Trip not found');
+        if (!trip) throw new Error(`Trip with ID ${tripId} not found`);
         return trip;
     } catch (error) {
-        console.error(`Fel vid hämtning av resa med ID ${tripId}:`, error.message);
-        throw error;
+        console.error(`Error fetching trip by ID ${tripId}:`, error.message);
+        throw new Error(error.message);
     }
 };
 
-// Lägg till en ny resa
+// Skapa en ny resa
 const addTrip = async (tripData) => {
-    const newTrip = new Trip(tripData);
-    return await newTrip.save();
+    try {
+        const newTrip = new Trip(tripData);
+        return await newTrip.save();
+    } catch (error) {
+        console.error("Error adding trip:", error.message);
+        throw new Error(error.message);
+    }
 };
 
 // Uppdatera en resa
 const updateTrip = async (tripId, tripDataToUpdate) => {
-    const updatedTrip = await Trip.findOneAndUpdate(
-        { trip_id: tripId },
-        tripDataToUpdate,
-        { new: true, runValidators: true }
-    );
-    if (!updatedTrip) throw new Error('Trip not found');
-    return updatedTrip;
+    try {
+        const updatedTrip = await Trip.findOneAndUpdate(
+            { trip_id: tripId },
+            { $set: tripDataToUpdate },
+            { new: true, runValidators: true }
+        );
+        if (!updatedTrip) throw new Error(`Trip with ID ${tripId} not found`);
+        return updatedTrip;
+    } catch (error) {
+        console.error(`Error updating trip with ID ${tripId}:`, error.message);
+        throw new Error(error.message);
+    }
 };
 
 module.exports = {

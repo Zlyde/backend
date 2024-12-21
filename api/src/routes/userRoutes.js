@@ -1,7 +1,5 @@
 /**
  * src/routes/userRoutes.js
- * Ansvar:
- * - Definiera API-logiken för användare och koppla samman med service layer.
  */
 
 const express = require('express');
@@ -28,15 +26,15 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST: Lägg till en ny användare
-router.post('/', async (req, res) => {
-    try {
-        const newUser = await userService.addUser(req.body);
-        res.status(201).json(newUser);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
+// // POST: Lägg till en ny användare
+// router.post('/', async (req, res) => {
+//     try {
+//         const newUser = await userService.addUser(req.body);
+//         res.status(201).json(newUser);
+//     } catch (err) {
+//         res.status(400).json({ error: err.message });
+//     }
+// });
 
 // PUT: Uppdatera en användare
 router.put('/:id', async (req, res) => {
