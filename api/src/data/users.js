@@ -44,17 +44,6 @@ const getUserByEmail = async (email) => {
     }
 };
 
-// // Lägg till en ny användare
-// const addUser = async (userData) => {
-//     try {
-//         const newUser = new User(userData);
-//         return await newUser.save();
-//     } catch (error) {
-//         console.error("Error adding user:", error.message);
-//         throw new Error(error.message);
-//     }
-// };
-
 // Uppdatera en användare
 const updateUser = async (id, userData) => {
     try {
@@ -89,7 +78,6 @@ module.exports = {
     getUserById,
     getUserByGithubId,
     getUserByEmail,
-    // addUser,
     updateUser,
     deleteUser
 };

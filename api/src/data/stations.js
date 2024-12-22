@@ -88,8 +88,6 @@ const getBikesAtChargingStation = async (stationId) => {
 module.exports = {
     getAllChargingStations,
     getChargingStationById,
-    // addChargingStation,
-    // updateChargingStation,
     deleteChargingStation,
     getBikesAtChargingStation
 };

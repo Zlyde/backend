@@ -32,11 +32,6 @@ const getCityById = async (id) => {
     }
 };
 
-// const getCityById = async (id) => {
-//     const city = await City.findById(id)
-//     return city
-// };
-
 // Hämta en specifik stad baserat på sökord
 const getCityByQuery = async (query) => {
     try {
@@ -51,11 +46,6 @@ const getCityByQuery = async (query) => {
     }
 };
 
-// const getCityByQuery = async (query) => {
-//     const city = await City.findOne(query)
-//     return city
-// };
-
 // Hämta en specifik stad baserat på namn, används ex för att verifiera att namn är unikt
 const getCityByName = async (name) => {
     try {
@@ -63,40 +53,6 @@ const getCityByName = async (name) => {
         return city; // Returnerar null om ingen stad hittas
     } catch (error) {
         console.error(`Error fetching city by name '${name}':`, error.message);
-        throw new Error(error.message);
-    }
-};
-
-// // Lägg till en ny stad
-// const addCity = async (city) => {
-//     try {
-//         const newCity = new City(city);
-//         return await newCity.save();
-//     } catch (error) {
-//         console.error("Error adding city:", error.message);
-//         throw new Error(error.message);
-//     }
-// };
-// const addCity = async (city) => {
-//     const newCity = new City(city)
-//     console.log('Added city', newCity)
-//     return await newCity.save()
-// };
-
-// Uppdatera en stad
-const updateCity = async (id, cityData) => {
-    try {
-        const updatedCity = await City.findOneAndUpdate(
-            { city_id: id },
-            { $set: cityData },
-            { new: true, runValidators: true }
-        );
-        if (!updatedCity) {
-            throw new Error(`City with ID ${id} not found`);
-        }
-        return updatedCity;
-    } catch (error) {
-        console.error(`Error updating city with ID ${id}:`, error.message);
         throw new Error(error.message);
     }
 };
@@ -121,7 +77,5 @@ module.exports = {
     getCityById,
     getCityByQuery,
     getCityByName,
-    // addCity,
-    updateCity,
     deleteCity,
 };

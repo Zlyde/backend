@@ -30,35 +30,6 @@ const getParkingZoneById = async (id) => {
     }
 };
 
-// // Lägg till en ny parkeringszon
-// const addParkingZone = async (zoneData) => {
-//     try {
-//         const newZone = new ParkingZone(zoneData);
-//         return await newZone.save();
-//     } catch (error) {
-//         console.error("Error adding parking zone:", error.message);
-//         throw new Error(error.message);
-//     }
-// };
-
-// // Uppdatera en parkeringszon
-// const updateParkingZone = async (id, zoneDataToUpdate) => {
-//     try {
-//         const updatedZone = await ParkingZone.findOneAndUpdate(
-//             { parking_zone_id: id },
-//             { $set: zoneDataToUpdate },
-//             { new: true, runValidators: true }
-//         );
-//         if (!updatedZone) {
-//             throw new Error(`Parking zone with ID ${id} not found`);
-//         }
-//         return updatedZone;
-//     } catch (error) {
-//         console.error(`Error updating parking zone with ID ${id}:`, error.message);
-//         throw new Error(error.message);
-//     }
-// };
-
 // Ta bort en parkeringszon
 const deleteParkingZone = async (id) => {
     try {
@@ -88,8 +59,6 @@ const getBikesAtParkingZone = async (zoneId) => {
 module.exports = {
     getAllParkingZones,
     getParkingZoneById,
-    // addParkingZone,
-    // updateParkingZone,
     deleteParkingZone,
     getBikesAtParkingZone
 };
