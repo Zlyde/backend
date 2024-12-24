@@ -1,3 +1,7 @@
+/**
+ * src/data/geoData.js
+ */
+
 const mongoose = require('mongoose');
 const Bike = require('../models/bikeModel');
 const ChargingStation = require('../models/stationModel');

@@ -10,6 +10,13 @@
  */
 
 const tripData = require('../data/trips');
+const bikeData = require('../data/bikes');
+const {
+    validateBikeAvailability,
+    createTripStartData,
+    calculateTripDuration,
+    updateBikeStatus,
+} = require('../data/tripHelpers');
 
 // Hämta alla resor
 const getAllTrips = async () => {
@@ -34,23 +41,57 @@ const getTripById = async (tripId) => {
     return trip;
 };
 
-// Påbörja ny resa
-const addTrip = async (trip) => {
-    return await tripData.addTrip(trip);
+// Starta en ny resa
+const startTrip = async (tripDataInput) => {
+    const { bike_id, user_id } = tripDataInput;
+
+    // Hämta cykel och validera dess status
+    const bike = await bikeData.getBikeById(bike_id);
+    await validateBikeAvailability(bike);
+
+    // Skapa resans startdata
+    const tripStartData = createTripStartData(bike, user_id);
+
+    // Uppdatera cykelns status till "in-use"
+    await updateBikeStatus(bike_id, 'in-use');
+
+    // Spara resan i databasen
+    const newTrip = await tripData.addTrip(tripStartData);
+    return newTrip;
 };
 
-// Uppdatera en resa
-const updateTrip = async (tripId, tripDataToUpdate) => {
-    const updatedTrip = await tripData.updateTrip(tripId, tripDataToUpdate);
-    if (!updatedTrip) {
-        throw new Error('Trip not found');
+// Avsluta en resa
+const endTrip = async (tripId) => {
+    const trip = await tripData.getTripById(tripId);
+    if (!trip || trip.end_time) {
+        throw new Error('Trip not found or already ended.');
     }
+
+    const bike = await bikeData.getBikeById(trip.bike_id);
+    if (!bike) {
+        throw new Error(`Bike with ID ${trip.bike_id} not found.`);
+    }
+
+    // Uppdatera resans avslutsdata
+    const endTime = new Date();
+    const updatedTripData = {
+        end_time: endTime,
+        end_location: { coordinates: bike.location.coordinates },
+        duration: calculateTripDuration(trip.start_time, endTime),
+    };
+
+    // Uppdatera resan i databasen
+    const updatedTrip = await tripData.updateTrip(tripId, updatedTripData);
+
+    // Uppdatera cykelns status till "available"
+    await updateBikeStatus(bike.bike_id, 'available');
+
     return updatedTrip;
 };
 
 module.exports = {
     getAllTrips,
     getTripById,
-    addTrip,
-    updateTrip
+    startTrip,
+    endTrip
 };
