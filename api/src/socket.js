@@ -17,9 +17,9 @@ const initSocket = (server) => {
     })
 
     socket.on('update-position', (data)=> {
-      const { tripId, position } = data
-      io.to(`trip-${tripId}`).emit('position-updated', { tripId, position })
-      console.log(position)
+      const { tripId, location } = data
+      io.to(`trip-${tripId}`).emit('position-updated', { tripId, location })
+      console.log(location)
     })
 
     socket.on('disconnect', () => {
