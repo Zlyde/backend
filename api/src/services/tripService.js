@@ -18,6 +18,7 @@ const {
     calculateTripDuration,
     updateBikeStatus,
 } = require('../data/tripHelpers');
+const invoiceService = require('./invoiceService');
 
 // Hämta alla resor
 const getAllTrips = async () => {
@@ -62,6 +63,10 @@ const startTrip = async (tripDataInput) => {
 
     // Uppdatera cykelns status till "in-use"
     await updateBikeStatus(bike_id, 'in-use');
+    
+    // Skapa faktura för resan
+    const invoice = await invoiceService.createInvoice(tripId, trip.user_id);
+    console.log(`Invoice created for trip ${tripId}:`, invoice);
 
     // Spara resan i databasen
     const newTrip = await tripData.addTrip(tripStartData);

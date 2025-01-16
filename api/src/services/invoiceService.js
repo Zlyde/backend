@@ -5,11 +5,11 @@
 const invoiceData = require('../data/invoices');
 const tripData = require('../data/trips');
 const geoService = require('./geoService');
-const appSettings = require('../data/appSettings');
+const settingService = require('./settingService');
 
 const createInvoice = async (tripId, userId) => {
     try {
-        // Säkerställer att nödvändiga parametrar skickats
+        // Säkerställ att nödvändiga parametrar skickats
         if (!tripId || !userId) {
             throw new Error('Both tripId and userId are required to create an invoice.');
         }
@@ -20,16 +20,22 @@ const createInvoice = async (tripId, userId) => {
             throw new Error(`Trip with ID ${tripId} not found.`);
         }
 
+        // Hämta inställningar
+        const settings = await settingService.getSettings();
+        if (!settings) {
+            throw new Error('Settings not found.');
+        }
+
         // Beräkna grundpris och rörlig taxa
-        const basePrice = appSettings.base_price;
-        const variablePrice = trip.duration * appSettings.price_per_minute;
+        const basePrice = settings.base_price;
+        const variablePrice = trip.duration * settings.price_per_minute;
 
         // Kontrollera rabatter
         let discount = 0;
         const isInParkingZone = await geoService.isInParkingZone(trip.start_location.coordinates);
         const isInChargingStation = await geoService.isInChargingStation(trip.start_location.coordinates);
         if (!isInParkingZone && !isInChargingStation) {
-            discount = appSettings.start_discount;
+            discount = settings.start_discount;
         }
 
         // Kontrollera avgifter
@@ -37,7 +43,7 @@ const createInvoice = async (tripId, userId) => {
         const isEndInParkingZone = await geoService.isInParkingZone(trip.end_location.coordinates);
         const isEndInChargingStation = await geoService.isInChargingStation(trip.end_location.coordinates);
         if (!isEndInParkingZone && !isEndInChargingStation) {
-            fee = appSettings.fee_amount;
+            fee = settings.fee_amount;
         }
 
         // Beräkna totalbelopp
