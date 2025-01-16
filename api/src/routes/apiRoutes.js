@@ -20,6 +20,7 @@ const stationRoutes = require('./stationRoutes');
 const tripRoutes = require('./tripRoutes');
 const userRoutes = require('./userRoutes');
 const zoneRoutes = require('./zoneRoutes');
+const settingRoutes = require('./settingRoutes');
 
 // Koppla endpoints till routefil
 router.use('/auth', authRoutes)
@@ -29,6 +30,7 @@ router.use('/station', stationRoutes);
 router.use('/trip', tripRoutes);
 router.use('/user', userRoutes);
 router.use('/zone', zoneRoutes);
+router.use('/setting', settingRoutes);
 
 
 // Rot-route
@@ -43,6 +45,7 @@ router.get('/', (req, res) => {
             trips: "/api/trip",
             zones: "/api/zone",
             users: "/api/user",
+            settings: "/api/setting"
         },
     };
 
