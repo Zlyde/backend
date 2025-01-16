@@ -43,6 +43,44 @@ const getTripById = async (tripId) => {
     return trip;
 };
 
+// Hämta en specifik resa baserat på user-id
+const getTripsByUserId = async (userId) => {
+    try {
+        if (!userId) {
+            throw new Error('User ID is required to fetch trip history.');
+        }
+
+        const trips = await tripData.getTripsByUserId(userId);
+        if (!trips || trips.length === 0) {
+            throw new Error(`No trips found for user with ID ${userId}`);
+        }
+
+        return trips;
+    } catch (error) {
+        console.error(`Error fetching trips for user ${userId}:`, error.message);
+        throw error;
+    }
+};
+
+// Hämta en specifik resa baserat på bike-id
+const getTripsByBikeId = async (bikeId) => {
+    try {
+        if (!bikeId) {
+            throw new Error('Bike ID is required to fetch trips.');
+        }
+
+        const trips = await tripData.getTripsByBikeId(bikeId);
+        if (!trips || trips.length === 0) {
+            throw new Error(`No trips found for bike with ID ${bikeId}`);
+        }
+
+        return trips;
+    } catch (error) {
+        console.error(`Error fetching trips for bike ${bikeId}:`, error.message);
+        throw error;
+    }
+};
+
 // Starta en ny resa
 const startTrip = async (tripDataInput) => {
     const { bike_id, user_id } = tripDataInput;
@@ -157,6 +195,8 @@ const updateBikeStatus = async (bikeId, status) => {
 module.exports = {
     getAllTrips,
     getTripById,
+    getTripsByUserId,
+    getTripsByBikeId,
     startTrip,
     endTrip
 };

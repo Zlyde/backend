@@ -27,7 +27,7 @@ const getInvoiceById = async (invoiceId) => {
     }
 };
 
-// Hämta specifik faktura baserat på user_id
+// Hämta fakturor baserat på user_id
 const getInvoicesByUserId = async (userId) => {
     try {
         const invoices = await Invoice.find({ user_id: userId });

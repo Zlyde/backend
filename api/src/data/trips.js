@@ -29,6 +29,29 @@ const getTripById = async (tripId) => {
     }
 };
 
+// Hämta resor baserat på user_id
+const getTripsByUserId = async (userId) => {
+    try {
+        const trips = await Trip.find({ user_id: userId });
+        return trips;
+    } catch (error) {
+        console.error(`Error fetching trips for user ${userId}:`, error.message);
+        throw error;
+    }
+};
+
+// Hämta resor baserat på bike_id
+const getTripsByBikeId = async (bikeId) => {
+    try {
+        const trips = await Trip.find({ bike_id: bikeId });
+        return trips;
+    } catch (error) {
+        console.error(`Error fetching trips for bike ${bikeId}:`, error.message);
+        throw error;
+    }
+};
+
+
 // Skapa en ny resa
 const addTrip = async (tripData) => {
     try {
@@ -61,6 +84,8 @@ const updateTrip = async (tripId, tripDataToUpdate) => {
 module.exports = {
     getAllTrips,
     getTripById,
+    getTripsByUserId,
+    getTripsByBikeId,
     addTrip,
     updateTrip
 };
