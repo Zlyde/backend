@@ -18,6 +18,8 @@ const getAllTrips = async () => {
 // Hämta specifik resa baserat på trip_id
 const getTripById = async (tripId) => {
     try {
+        console.log(tripId);
+        
         const trip = await Trip.findOne({ trip_id: tripId });
         if (!trip) throw new Error(`Trip with ID ${tripId} not found`);
         return trip;
@@ -31,6 +33,8 @@ const getTripById = async (tripId) => {
 const addTrip = async (tripData) => {
     try {
         const newTrip = new Trip(tripData);
+        console.log("Added trip", newTrip);
+        
         return await newTrip.save();
     } catch (error) {
         console.error("Error adding trip:", error.message);

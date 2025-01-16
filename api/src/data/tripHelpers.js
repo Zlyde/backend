@@ -3,8 +3,11 @@
  */
 
 // Validera om en cykel kan hyras
+
 const validateBikeAvailability = async (bikeId) => {
+    const Bike = require('../models/bikeModel');
     const bike = await Bike.findOne({ bike_id: bikeId });
+    console.log("Bike fetched:", bike);
     if (!bike) {
         throw new Error('Bike not found.');
     }
@@ -39,6 +42,7 @@ const calculateTripDuration = (startTime, endTime) => {
 
 // Uppdatera cykelstatus
 const updateBikeStatus = async (bikeId, status) => {
+    const Bike = require('../models/bikeModel');
     const bike = await Bike.findOneAndUpdate(
         { bike_id: bikeId },
         { status: status },
