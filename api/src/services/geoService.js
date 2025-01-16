@@ -74,8 +74,40 @@ const getBikesInParkingZone = async (zoneId) => {
     }
 };
 
+/**
+ * Kontrollera om en koordinat är inom en parkeringszon
+ * @param {Array} coordinates - Array av [longitude, latitude]
+ * @returns {Boolean} - True om koordinaterna är i en parkeringszon
+ */
+const isInParkingZone = async (coordinates) => {
+    try {
+        const parkingZones = await geoData.getBikesInParkingZone();
+        return parkingZones.some(zone => geoData.isPointWithinGeometry(zone.location, coordinates));
+    } catch (error) {
+        console.error('Error checking parking zone:', error.message);
+        throw error;
+    }
+};
+
+/**
+ * Kontrollera om en koordinat är inom en laddstation
+ * @param {Array} coordinates - Array av [longitude, latitude]
+ * @returns {Boolean} - True om koordinaterna är i en laddstation
+ */
+const isInChargingStation = async (coordinates) => {
+    try {
+        const chargingStations = await geoData.getBikesInChargingStation();
+        return chargingStations.some(station => geoData.isPointWithinGeometry(station.location, coordinates));
+    } catch (error) {
+        console.error('Error checking charging station:', error.message);
+        throw error;
+    }
+};
+
 module.exports = {
     getBikesInChargingStation,
     getBikesInParkingZone,
-    getBikesInCity
+    getBikesInCity,
+    isInParkingZone,
+    isInChargingStation,
 };

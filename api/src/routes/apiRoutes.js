@@ -16,6 +16,7 @@ const middleware = require('../middleware/auth')
 const authRoutes = require('./authRoutes')
 const bikeRoutes = require('./bikeRoutes');
 const cityRoutes = require('./cityRoutes');
+const invoiceRoutes = require('./invoiceRoutes');
 const stationRoutes = require('./stationRoutes');
 const tripRoutes = require('./tripRoutes');
 const userRoutes = require('./userRoutes');
@@ -26,12 +27,12 @@ const settingRoutes = require('./settingRoutes');
 router.use('/auth', authRoutes)
 router.use('/bike', bikeRoutes);
 router.use('/city', cityRoutes);
+router.use('/invoice', invoiceRoutes);
 router.use('/station', stationRoutes);
 router.use('/trip', tripRoutes);
 router.use('/user', userRoutes);
 router.use('/zone', zoneRoutes);
 router.use('/setting', settingRoutes);
-
 
 // Rot-route
 router.get('/', (req, res) => {
@@ -41,11 +42,12 @@ router.get('/', (req, res) => {
             auth: "/api/auth",
             bikes: "/api/bike",
             city: "/api/city",
+            invoices: "/api/invoice",
             stations: "/api/station",
             trips: "/api/trip",
             zones: "/api/zone",
             users: "/api/user",
-            settings: "/api/setting"
+            settings: "/api/setting",
         },
     };
 
