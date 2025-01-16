@@ -27,6 +27,17 @@ const getInvoiceById = async (invoiceId) => {
     }
 };
 
+// Hämta specifik faktura baserat på user_id
+const getInvoicesByUserId = async (userId) => {
+    try {
+        const invoices = await Invoice.find({ user_id: userId });
+        return invoices;
+    } catch (error) {
+        console.error(`Error fetching invoices for user ${userId}:`, error.message);
+        throw error;
+    }
+};
+
 // Skapa en ny faktura
 const addInvoice = async (invoiceData) => {
     try {
@@ -58,6 +69,7 @@ const updateInvoice = async (invoiceId, invoiceDataToUpdate) => {
 module.exports = {
     getAllInvoices,
     getInvoiceById,
+    getInvoicesByUserId,
     addInvoice,
     updateInvoice
 };

@@ -26,6 +26,17 @@ router.get('/:invoiceId', async (req, res) => {
     }
 });
 
+// GET: Hämta alla fakturor för en specifik användare
+router.get('/user/:userId', async (req, res) => {
+    try {
+        const userId = parseInt(req.params.userId, 10);
+        const invoices = await invoiceService.getInvoicesByUserId(userId);
+        res.status(200).json(invoices);
+    } catch (error) {
+        res.status(404).json({ error: error.message });
+    }
+});
+
 // POST: Skapa en ny faktura
 router.post('/create', async (req, res) => {
     const { tripId, userId } = req.body;

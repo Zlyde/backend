@@ -97,6 +97,29 @@ const getInvoiceById = async (invoiceId) => {
 };
 
 /**
+ * Hämta alla fakturor för en specifik kund
+ * @param {Number} userId - ID för kunden vars fakturor ska hämtas
+ * @returns {Array} - Lista med fakturor
+ */
+const getInvoicesByUserId = async (userId) => {
+    try {
+        if (!userId) {
+            throw new Error('User ID is required to fetch invoices.');
+        }
+
+        const invoices = await invoiceData.getInvoicesByUserId(userId);
+        if (!invoices || invoices.length === 0) {
+            throw new Error(`No invoices found for user with ID ${userId}`);
+        }
+
+        return invoices;
+    } catch (error) {
+        console.error(`Error fetching invoices for user ${userId}:`, error.message);
+        throw error;
+    }
+};
+
+/**
  * Markera faktura som betald och registrera betalmetod
  * @param {Number} invoiceId - ID för fakturan
  * @param {String} paymentMethod - Betalmetod ("prepaid" eller "autogiro")
@@ -139,5 +162,6 @@ module.exports = {
     createInvoice,
     getAllInvoices,
     getInvoiceById,
-    markInvoiceAsPaid
+    markInvoiceAsPaid,
+    getInvoicesByUserId
 };
