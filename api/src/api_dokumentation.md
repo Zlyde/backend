@@ -358,14 +358,18 @@ Marks a specific invoice as paid and updates the payment method.
 | 201         | HTTP         | `Created`                                                 | Returned when a new invoice is successfully created.   |
 | 400         | Service      | `Validation error: Missing required fields`               | Triggered when `tripId` or `userId` is missing.        |
 | 400         | Service      | `Validation error: Invalid payment method`                | Triggered when an unsupported payment method is provided. |
+| 400         | Service      | `Validation error: Insufficient funds`                    | Triggered when the user does not have enough balance for a `prepaid` payment. |
 | 404         | HTTP         | `Invoice with ID {id} not found.`                         | Triggered when the specified invoice ID does not exist. |
 | 404         | HTTP         | `No invoices found for user with ID {id}`                 | Triggered when no invoices are associated with the given user. |
+| 404         | HTTP         | `User with ID {userId} not found.`                        | Triggered when the user associated with the invoice does not exist. |
 | 500         | Data         | `Error fetching invoices: {error}`                        | Generic server error for fetching invoices.            |
 | 500         | Data         | `Error creating invoice: {error}`                         | Generic server error for creating an invoice.          |
+| 500         | Data         | `Error updating invoice: {error}`                         | Generic server error for updating an invoice.          |
 
 #### Notes
 - The `invoiceService` validates and calculates pricing based on trip details and system settings.
 - Dependencies like `geoService` and `settingService` are used to calculate discounts and fees dynamically during invoice creation.
+- The dependency `userService` is used to apply the preferred payment method. For prepaid payments, it verifies the user’s account balance to ensure sufficient funds. If funds are sufficient, the balance is deducted; otherwise, an error is returned.
 
 ## Settings Endpoints
 

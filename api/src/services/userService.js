@@ -51,6 +51,22 @@ const updateUser = async (id, userDataToUpdate) => {
             throw new Error('Account balance cannot be negative');
         }
 
+        // Kontrollera att betalningsmetod är giltig
+        if (userDataToUpdate.preferred_payment_method) {
+            const validMethods = ['prepaid', 'autogiro'];
+            if (!validMethods.includes(userDataToUpdate.preferred_payment_method)) {
+                throw new Error(`Invalid payment method: ${userDataToUpdate.preferred_payment_method}. Valid methods are: ${validMethods.join(', ')}`);
+            }
+
+            // Om autogiro används, säkerställ att autogirodetaljer anges
+            if (
+                userDataToUpdate.preferred_payment_method === 'autogiro' &&
+                (!userDataToUpdate.autogiro_details || typeof userDataToUpdate.autogiro_details !== 'string' || userDataToUpdate.autogiro_details.trim() === '')
+            ) {
+                throw new Error('Autogiro details are required for the autogiro payment method.');
+            }
+        }
+
         // Uppdatera användaren
         const updatedUser = await userData.updateUser(id, userDataToUpdate);
         if (!updatedUser) {
@@ -62,6 +78,23 @@ const updateUser = async (id, userDataToUpdate) => {
         console.error("Error updating user:", error.message);
         throw error;
     }
+};
+
+// Fyll på saldo (prepaid)
+const addToBalance = async (id, amount) => {
+    if (amount <= 0) {
+        throw new Error('Amount must be greater than 0.');
+    }
+
+    const user = await getUserById(id);
+    if (user.preferred_payment_method !== 'prepaid') {
+        throw new Error('User does not use the prepaid payment method.');
+    }
+
+    user.account_balance += amount;
+
+    const updatedUser = await userData.updateUser(id, { account_balance: user.account_balance });
+    return updatedUser;
 };
 
 // Ta bort en användare
@@ -79,5 +112,6 @@ module.exports = {
     getAllUsers,
     getUserById,
     updateUser,
+    addToBalance,
     deleteUser
 };

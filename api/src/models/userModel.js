@@ -24,11 +24,6 @@ const userSchema = new mongoose.Schema({
             return !this.githubId; // Endast krav om OAuth-ID saknas
         }
     },
-    account_balance: { 
-        type: Number, 
-        default: 0,
-        min: [0, 'Account balance cannot be negative']
-    }, 
     githubId: { 
         type: String,
         unique: true,
@@ -41,6 +36,23 @@ const userSchema = new mongoose.Schema({
         default: 'customer',
         index: true
     },
+    preferred_payment_method: {
+        type: String,
+        enum: ['prepaid', 'autogiro'],
+        default: 'prepaid', // Default till prepaid
+        required: true,
+    },
+    account_balance: { 
+        type: Number, 
+        default: 0,
+        min: [0, 'Account balance cannot be negative']
+    }, 
+    autogiro_details: {
+        type: String,
+        required: function () {
+            return this.preferred_payment_method === 'autogiro'; // Kräv detaljer om betalningsmetoden är autogiro
+        }
+    }
 }, {timestamps: true});
 
 // Automatisk tilldelnign av ID

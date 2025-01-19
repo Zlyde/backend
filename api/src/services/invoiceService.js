@@ -6,6 +6,7 @@ const invoiceData = require('../data/invoices');
 const tripData = require('../data/trips');
 const geoService = require('./geoService');
 const settingService = require('./settingService');
+const userService = require('../services/userService');
 
 const createInvoice = async (tripId, userId) => {
     try {
@@ -125,14 +126,13 @@ const getInvoicesByUserId = async (userId) => {
  * @param {String} paymentMethod - Betalmetod ("prepaid" eller "autogiro")
  * @returns {Object} - Den uppdaterade fakturan
  */
-const markInvoiceAsPaid = async (invoiceId, paymentMethod) => {
+/**
+ * Markera faktura som betald och registrera betalmetod
+ * @param {Number} invoiceId - ID för fakturan
+ * @returns {Object} - Den uppdaterade fakturan
+ */
+const markInvoiceAsPaid = async (invoiceId) => {
     try {
-        // Validera betalmetod
-        const validPaymentMethods = ['prepaid', 'autogiro'];
-        if (!validPaymentMethods.includes(paymentMethod)) {
-            throw new Error('Invalid payment method. Accepted values are "prepaid" or "autogiro".');
-        }
-
         // Hämta fakturan för att säkerställa att den existerar
         const invoice = await invoiceData.getInvoiceById(invoiceId);
         if (!invoice) {
@@ -144,7 +144,38 @@ const markInvoiceAsPaid = async (invoiceId, paymentMethod) => {
             throw new Error(`Invoice with ID ${invoiceId} is already marked as paid.`);
         }
 
-        // Uppdatera fakturan
+        // Hämta användaren kopplad till fakturan
+        const user = await userService.getUserById(invoice.user_id);
+        if (!user) {
+            throw new Error(`User with ID ${invoice.user_id} not found.`);
+        }
+
+        // Kontrollera användarens valda betalmetod
+        const paymentMethod = user.preferred_payment_method;
+
+        if (!paymentMethod) {
+            throw new Error(`User with ID ${user.user_id} has not selected a payment method.`);
+        }
+
+        // Hantera betalning baserat på vald betalmetod
+        if (paymentMethod === 'prepaid') {
+            if (user.account_balance < invoice.total_amount) {
+                throw new Error('Insufficient prepaid balance to pay the invoice.');
+            }
+
+            // Minska användarens saldo
+            user.account_balance -= invoice.total_amount;
+            await userService.updateUser(user.user_id, { account_balance: user.account_balance });
+
+            console.log(`User ${user.user_id}'s prepaid balance updated.`);
+        } else if (paymentMethod === 'autogiro') {
+            console.log(`Invoice ${invoiceId} will be paid using autogiro.`);
+            // Logik för autogiro kan utökas här om det behövs
+        } else {
+            throw new Error(`Invalid payment method for user ${user.user_id}: ${paymentMethod}`);
+        }
+
+        // Uppdatera fakturan till "paid"
         const updatedInvoice = await invoiceData.updateInvoice(invoiceId, {
             status: 'paid',
             payment_method: paymentMethod,
