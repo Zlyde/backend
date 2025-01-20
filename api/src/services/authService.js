@@ -32,31 +32,39 @@ const auth = {
     }
   },
   login: async (req, res) => {
-    const {email, password} = req.body
-
+    const { email, password } = req.body;
+  
     if (!email || !password) {
-      return res.json({ error: 'Missing Field' })
+      return res.status(400).json({ error: 'Missing Field' });
     }
-
+  
     try {
-      const user = await User.findOne({ email: email })
-      if(!user) return res.status(401).json({ message: 'User not found'});
-      const matchPassword = await bcrypt.compare(password, user.password)
-      if(!matchPassword) return res.status(401).json({ message: 'Wrong password' });
-
-      const playload = { email: user.email }
-      const token = jwt.sign(playload, jwtSecret, {expiresIn: '24h'})
-
-      return res.json({ 
-        data: {
-          message: 'User logd in',
-          token: token,
-          user: user
-        }
-      })
-    } catch (error){
-      console.log(error)
-      return res.status({ error: 'Error loging in' })
+      const user = await User.findOne({ email: email });
+      if (!user) return res.status(401).json({ message: 'User not found' });
+  
+      const matchPassword = await bcrypt.compare(password, user.password);
+      if (!matchPassword) return res.status(401).json({ message: 'Wrong password' });
+  
+      // Inkludera userId och email i token-payload
+      const payload = { userId: user.user_id, email: user.email };
+      const token = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
+  
+      return res.json({
+        message: 'User logged in successfully',
+        token: token, // Skicka JWT-token
+        user: {
+          userId: user.user_id, // Skicka userId
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          accountBalance: user.account_balance,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Error logging in' });
     }
   },
 
