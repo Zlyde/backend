@@ -9,7 +9,6 @@
  * - Uppdatera en resa
  */
 
-
 const tripData = require('../data/trips');
 const bikeData = require('../data/bikes');
 const {
@@ -19,6 +18,8 @@ const {
     updateBikeStatus,
 } = require('../data/tripHelpers');
 const invoiceService = require('./invoiceService');
+const userService = require('./userService');
+const geoService = require('./geoService'); // För att kontrollera om cykeln är i på laddstation
 
 // Hämta alla resor
 const getAllTrips = async () => {
@@ -135,8 +136,22 @@ const endTrip = async (tripId) => {
     // Uppdatera resan i databasen
     const updatedTrip = await tripData.updateTrip(tripId, updatedTripData);
 
-    // Uppdatera cykelns status till "available"
-    await updateBikeStatus(bike.bike_id, 'available');
+    // Kontrollera cykelns batterinivå och slutposition
+    if (bike.battery_level < 50) { // Om batteriniviån är under 50%
+        // Kontrollera om cykeln är i en laddstation
+        const isInChargingStation = await geoService.isInChargingStation(updatedTripData.end_location.coordinates);
+        // Uppdatera cykelns status till "available" om den är i en laddstation, annars "maintenance"
+        const newStatus = isInChargingStation ? 'available' : 'maintenance';
+        await updateBikeStatus(bike.bike_id, newStatus);
+
+        // Logga statusändring
+        if (newStatus === 'maintenance') {
+            console.log(`Bike ${bike.bike_id} set to maintenance due to low battery.`);
+        }
+    } else {
+        // Uppdatera cykelns status till "available" om batterinivån är tillräcklig
+        await updateBikeStatus(bike.bike_id, 'available');
+    }
 
     // Skapa faktura om användaren är en kund
     const user = await userService.getUserById(trip.user_id);
