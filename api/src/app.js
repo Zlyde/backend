@@ -16,6 +16,7 @@ const cors = require('cors')
 const passport = require('passport')
 require('./passport')
 const initSocket = require('./socket')
+const API_VERSION = require('./config/api_version'); // Importera API_VERSION
 
 const app = express();
 const server = http.createServer(app)
@@ -30,8 +31,11 @@ app.use(cors({
 }))
 app.use(passport.initialize())
 
-// Koppla rutter
-app.use('/api', apiRoutes); // Bas-URL: /api
+// // Koppla rutter
+// app.use('/api', apiRoutes); // Bas-URL: /api
+
+// Lägg till API-version som basväg
+app.use(API_VERSION, apiRoutes); // Nu blir alla routes versionerade
 
 // Starta servern
 // const PORT = 5001;
