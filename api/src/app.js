@@ -31,11 +31,9 @@ app.use(cors({
 }))
 app.use(passport.initialize())
 
-// // Koppla rutter
-// app.use('/api', apiRoutes); // Bas-URL: /api
-
 // Lägg till API-version som basväg
-app.use(API_VERSION, apiRoutes); // Nu blir alla routes versionerade
+app.use('/api', apiRoutes); // Bas-URL: /api
+// app.use(API_VERSION, apiRoutes); // Nu blir alla routes versionerade
 
 // Starta servern
 // const PORT = 5001;
