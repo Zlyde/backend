@@ -36,7 +36,7 @@ router.put('/', async (req, res) => {
 });
 
 // Återställ inställningar till standardvärden
-router.post('/reset', async (req, res) => {
+router.put('/reset', async (req, res) => {
     try {
         const resetSettings = await settingService.resetSettings();
         res.status(200).json(resetSettings);

@@ -9,7 +9,6 @@
  * - Uppdatera en resa
  */
 
-
 const tripData = require('../data/trips');
 const bikeData = require('../data/bikes');
 const {
@@ -19,6 +18,8 @@ const {
     updateBikeStatus,
 } = require('../data/tripHelpers');
 const invoiceService = require('./invoiceService');
+const userService = require('./userService');
+const geoService = require('./geoService'); // För att kontrollera om cykeln är i på laddstation
 
 // Hämta alla resor
 const getAllTrips = async () => {
@@ -113,7 +114,6 @@ const startTrip = async (tripDataInput) => {
     return newTrip;
 };
 
-// Avsluta en resa
 const endTrip = async (tripId) => {
     const trip = await tripData.getTripById(tripId);
     if (!trip || trip.end_time) {
@@ -136,61 +136,33 @@ const endTrip = async (tripId) => {
     // Uppdatera resan i databasen
     const updatedTrip = await tripData.updateTrip(tripId, updatedTripData);
 
-    // Uppdatera cykelns status till "available"
-    await updateBikeStatus(bike.bike_id, 'available');
+    // Kontrollera cykelns batterinivå och slutposition
+    if (bike.battery_level < 50) { // Om batteriniviån är under 50%
+        // Kontrollera om cykeln är i en laddstation
+        const isInChargingStation = await geoService.isInChargingStation(updatedTripData.end_location.coordinates);
+        // Uppdatera cykelns status till "available" om den är i en laddstation, annars "maintenance"
+        const newStatus = isInChargingStation ? 'available' : 'maintenance';
+        await updateBikeStatus(bike.bike_id, newStatus);
+
+        // Logga statusändring
+        if (newStatus === 'maintenance') {
+            console.log(`Bike ${bike.bike_id} set to maintenance due to low battery.`);
+        }
+    } else {
+        // Uppdatera cykelns status till "available" om batterinivån är tillräcklig
+        await updateBikeStatus(bike.bike_id, 'available');
+    }
+
+    // Skapa faktura om användaren är en kund
+    const user = await userService.getUserById(trip.user_id);
+    if (user.role === 'customer') {
+        await invoiceService.createInvoice(tripId, trip.user_id);
+    } else {
+        console.log(`For admin user ${user.user_id} this trip is free. No invoice created.`);
+    }
 
     return updatedTrip;
 };
-
-/* const validateBikeAvailability = async (bikeId) => {
-    console.log("in function");
-    const bike = await Bike.findOne({ bike_id: bikeId });
-
-    console.log("Bike fetched:", bike);
-    if (!bike) {
-        throw new Error('Bike not found.');
-    }
-    if (bike.status !== 'available') {
-        throw new Error('Bike is not available for rental.');
-    }
-    if (bike.battery_level < 50) {
-        throw new Error('Bike battery level must be at least 50%.');
-    }
-    return bike;
-};
-
-// Skapa startinformation för en resa
-const createTripStartData = (bike, userId) => {
-    return {
-        user_id: userId,
-        bike_id: bike.bike_id,
-        start_time: new Date(),
-        start_location: {
-            coordinates: bike.location.coordinates,
-        },
-    };
-};
-
-// Beräkna varaktighet av en resa
-const calculateTripDuration = (startTime, endTime) => {
-    if (!startTime || !endTime) {
-        throw new Error('Start time and end time are required to calculate duration.');
-    }
-    return Math.floor((endTime - startTime) / 1000); // Varaktighet i sekunder
-};
-
-// Uppdatera cykelstatus
-const updateBikeStatus = async (bikeId, status) => {
-    const bike = await Bike.findOneAndUpdate(
-        { bike_id: bikeId },
-        { status: status },
-        { new: true }
-    );
-    if (!bike) {
-        throw new Error(`Bike with ID ${bikeId} not found.`);
-    }
-    return bike;
-}; */
 
 module.exports = {
     getAllTrips,
