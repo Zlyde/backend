@@ -32,6 +32,21 @@ const getCityById = async (id) => {
     }
 };
 
+const updateCity = async (id, cityData) => {
+  try {
+      const cityUpdate = await City.findOneAndUpdate(
+          { city_id: id }, // Anger vilket dokument som ska uppdateras
+          { $set: cityData }, // Anger vad som ska uppdateras
+          { new: true, runValidators: true } // Returnera det uppdaterade dokumentet och kör validering
+      );
+      if (!cityUpdate) throw new Error('City not found');
+      return cityUpdate;
+  } catch (error) {
+      console.error(`Error updating city with ID ${id}:`, error.message);
+      throw new Error(error.message);
+  }
+};
+
 // Hämta en specifik stad baserat på sökord
 const getCityByQuery = async (query) => {
     try {
@@ -78,4 +93,5 @@ module.exports = {
     getCityByQuery,
     getCityByName,
     deleteCity,
+    updateCity
 };

@@ -8,19 +8,37 @@ const initSocket = (server) => {
     },
   })
 
+  const roomIds = []
+
   io.on('connection', (socket) => {
     // console.log('Client connected:', socket.id)
 
-    socket.on('join-trip-room', (tripId) => {
-      socket.join(`trip-${tripId}`)
-      // console.log(`${socket.id} joined room trip-${tripId}` )
+    socket.on('join-trip-room', (trip_id) => {
+      const roomName = `${trip_id}`;
+      socket.join(roomName)
+      // console.log(`${socket.id} joined room ${roomName}`)
+      
+      if (!roomIds.includes(roomName)) {
+        roomIds.push(roomName);
+      }
+
+      io.emit('IDs-forAdmin', (roomIds))
     })
 
-    socket.on('update-position', (data)=> {
-      const { tripId, location } = data
+    socket.on('join-all-rooms', () => {
+      roomIds.forEach((roomId) => {
+        socket.join(roomId)
+        // console.log(roomIds)
+      })
+    })
+
+    socket.on('update-position', (trip)=> {
+      const { bike, trip_id } = trip
       // io.emit('position-updated', data)
-      io.to(`trip-${tripId}`).emit('position-updated', (data))
-      // console.log(location)
+      io.to(`${trip_id}`).emit('position-updated', (trip))
+      // console.log(bike)
+      
+      io.emit('admin-trip-update', trip);
     })
 
     socket.on('disconnect', () => {

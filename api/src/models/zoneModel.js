@@ -16,11 +16,38 @@ const parkingZoneSchema = new mongoose.Schema({
             required: true
         }
     },
-    // capacity: { type: Number, default: 0 },
-    // current_bikes: { type: Number, default: 0 },
+    boundary: {
+        type: {
+            type: String,
+            enum: ['Polygon', 'MultiPolygon'],
+        },
+        coordinates: {
+            type: [[[Number]]],
+        }
+    },
+    capacity: { 
+        type: Number, 
+        default: 0, 
+        min: [0, 'Capacity cannot be less than 0'], 
+        max: [50, 'Capacity cannot be more than 50'] 
+    },
+    current_bikes: { 
+        type: Number, 
+        default: 0,
+        min: [0, 'Current bikes cannot be less than 0'], 
+        validate: {
+            validator: function(value) {
+                return value <= this.capacity;
+            },
+            message: 'Current bikes cannot exceed capacity'
+        }
+    },
+    color: {
+        type: String,
+    }
     // city_id: Number,
     // is_free: { type: Boolean, default: false }
-});
+}, {timestamps: true});
 
 // Automatisk tilldelnign av ID
 parkingZoneSchema.plugin(autoIncrement, {inc_field: 'parking_zone_id'})
