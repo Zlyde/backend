@@ -24,4 +24,13 @@ router.get(
   }
 )
 
+router.get(
+  '/github/callbackk',
+  passport.authenticate('github', { failureRedirect: '/login', session: false }),
+  async (req, res) => {
+    const { user, token } = req.user;
+    res.redirect(`http://localhost:3000/oauth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`)
+  }
+)
+
 module.exports = router
