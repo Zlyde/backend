@@ -15,3 +15,16 @@ passport.use(
     }
   )
 )
+
+passport.use(
+  new githubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID1,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET1,
+      callbackURL: 'http://localhost:5001/api/auth/github/callbackk',
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      await auth.githubLogin(profile, done)
+    }
+  )
+)
