@@ -102,10 +102,6 @@ const startTrip = async (tripDataInput) => {
 
     // Uppdatera cykelns status till "in-use"
     await updateBikeStatus(bike_id, 'in-use');
-    
-    // Skapa faktura för resan
-    const invoice = await invoiceService.createInvoice(tripId, trip.user_id);
-    console.log(`Invoice created for trip ${tripId}:`, invoice);
 
     // Spara resan i databasen
     const newTrip = await tripData.addTrip(tripStartData);
@@ -124,7 +120,8 @@ const endTrip = async (tripId) => {
     if (!bike) {
         throw new Error(`Bike with ID ${trip.bike_id} not found.`);
     }
-
+    console.log("Bike Location; ", bike.location.coordinates);
+    
     // Uppdatera resans avslutsdata
     const endTime = new Date();
     const updatedTripData = {
@@ -136,9 +133,17 @@ const endTrip = async (tripId) => {
     // Uppdatera resan i databasen
     const updatedTrip = await tripData.updateTrip(tripId, updatedTripData);
 
-    // Kontrollera cykelns batterinivå och slutposition
+    console.log("Updated Trip: ", updatedTrip);
+    
+    console.log("Battery: ", bike.battery_level);
+
+    await updateBikeStatus(bike.bike_id, 'available');
+    
+/*     // Kontrollera cykelns batterinivå och slutposition
     if (bike.battery_level < 50) { // Om batteriniviån är under 50%
         // Kontrollera om cykeln är i en laddstation
+        console.log("End location: ", updatedTripData.end_location.coordinates);
+        
         const isInChargingStation = await geoService.isInChargingStation(updatedTripData.end_location.coordinates);
         // Uppdatera cykelns status till "available" om den är i en laddstation, annars "maintenance"
         const newStatus = isInChargingStation ? 'available' : 'maintenance';
@@ -151,15 +156,15 @@ const endTrip = async (tripId) => {
     } else {
         // Uppdatera cykelns status till "available" om batterinivån är tillräcklig
         await updateBikeStatus(bike.bike_id, 'available');
-    }
+    } */
 
     // Skapa faktura om användaren är en kund
-    const user = await userService.getUserById(trip.user_id);
+/*     const user = await userService.getUserById(trip.user_id);
     if (user.role === 'customer') {
         await invoiceService.createInvoice(tripId, trip.user_id);
     } else {
         console.log(`For admin user ${user.user_id} this trip is free. No invoice created.`);
-    }
+    } */
 
     return updatedTrip;
 };
