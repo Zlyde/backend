@@ -30,6 +30,14 @@ const getCityById = async (id) => {
     return city;
 };
 
+const updateCity = async (id, data) => {
+  const city = await cityData.updateCity(id, data);
+  if (!city) {
+      throw new Error('City not found');
+  }
+  return city;
+};
+
 const getCityByQuery = async (query) => {
   const city = await cityData.getCityByQuery(query);
   if (!city) {
@@ -53,5 +61,6 @@ module.exports = {
     getAllCities,
     getCityById,
     deleteCity,
-    getCityByQuery
+    getCityByQuery,
+    updateCity
 };
