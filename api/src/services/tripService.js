@@ -139,7 +139,7 @@ const endTrip = async (tripId) => {
 
     await updateBikeStatus(bike.bike_id, 'available');
     
-/*     // Kontrollera cykelns batterinivå och slutposition
+    // Kontrollera cykelns batterinivå och slutposition
     if (bike.battery_level < 50) { // Om batteriniviån är under 50%
         // Kontrollera om cykeln är i en laddstation
         console.log("End location: ", updatedTripData.end_location.coordinates);
@@ -156,15 +156,15 @@ const endTrip = async (tripId) => {
     } else {
         // Uppdatera cykelns status till "available" om batterinivån är tillräcklig
         await updateBikeStatus(bike.bike_id, 'available');
-    } */
+    }
 
     // Skapa faktura om användaren är en kund
-/*     const user = await userService.getUserById(trip.user_id);
+    const user = await userService.getUserById(trip.user_id);
     if (user.role === 'customer') {
         await invoiceService.createInvoice(tripId, trip.user_id);
     } else {
         console.log(`For admin user ${user.user_id} this trip is free. No invoice created.`);
-    } */
+    }
 
     return updatedTrip;
 };

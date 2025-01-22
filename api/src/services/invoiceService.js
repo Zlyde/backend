@@ -33,7 +33,11 @@ const createInvoice = async (tripId, userId) => {
 
         // Kontrollera rabatter
         let discount = 0;
+        console.log(trip.start_location.coordinates);
+        
         const isInParkingZone = await geoService.isInParkingZone(trip.start_location.coordinates);
+        console.log(isInParkingZone);
+        
         const isInChargingStation = await geoService.isInChargingStation(trip.start_location.coordinates);
         if (!isInParkingZone && !isInChargingStation) {
             discount = settings.start_discount;

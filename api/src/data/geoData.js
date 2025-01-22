@@ -1,7 +1,7 @@
 /**
  * src/data/geoData.js
  */
-
+const turf = require('@turf/turf');
 const mongoose = require('mongoose');
 const Bike = require('../models/bikeModel');
 const ChargingStation = require('../models/stationModel');
@@ -11,20 +11,21 @@ const City = require('../models/cityModel');
 /**
  * Kontrollera om en punkt (koordinater) är inom ett område (GeoJSON)
  * @param {Object} geometry - GeoJSON-område
- * @param {Array} point - Array [longitude, latitude]
+ * @param {Array} pointCoords - Array [longitude, latitude]
  * @returns {Boolean} - True om punkten är inom området, annars false
  */
-const isPointWithinGeometry = (geometry, point) => {
-    const geoJSON = mongoose.mongo;
-    const polygon = new geoJSON.Geometry({
-        type: geometry.type,
-        coordinates: geometry.coordinates,
-    });
+const isPointWithinGeometry = (geometry, pointCoords) => {
+    try {
+        // Create GeoJSON objects for the point and the polygon
+        const turfPoint = turf.point(pointCoords);
+        const turfPolygon = turf.polygon(geometry.coordinates);
 
-    return polygon.contains({
-        type: 'Point',
-        coordinates: point,
-    });
+        // Check if the point is within the polygon
+        return turf.booleanPointInPolygon(turfPoint, turfPolygon);
+    } catch (error) {
+        console.error('Error in isPointWithinGeometry:', error.message);
+        throw error;
+    }
 };
 
 /**
@@ -59,6 +60,8 @@ const getBikesWithinArea = async (geometry) => {
 const getBikesInDefinedArea = async (id, model, type) => {
     try {
         const area = await model.findOne({ [`${type.toLowerCase()}_id`]: id });
+        console.log("Area:", area);
+        
 
         if (!area) {
             throw new Error(`${type} with ID ${id} not found`);
@@ -69,6 +72,8 @@ const getBikesInDefinedArea = async (id, model, type) => {
         }
 
         const geometry = area.boundary || area.location; // Prioritera boundary för städer, location för andra
+        console.log("Geometry:", geometry);
+        
         return await getBikesWithinArea(geometry);
     } catch (error) {
         console.error(`Error fetching bikes in ${type.toLowerCase()} with ID ${id}:`, error.message);

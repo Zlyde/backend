@@ -1,4 +1,10 @@
 const geoData = require('../data/geoData');
+const {
+    getAllParkingZones,
+} = require('../data/zones');
+const {
+    getAllChargingStations,
+} = require('../data/stations');
 
 /**
  * Validera ID
@@ -81,7 +87,7 @@ const getBikesInParkingZone = async (zoneId) => {
  */
 const isInParkingZone = async (coordinates) => {
     try {
-        const parkingZones = await geoData.getBikesInParkingZone();
+        const parkingZones = await getAllParkingZones();
         return parkingZones.some(zone => geoData.isPointWithinGeometry(zone.location, coordinates));
     } catch (error) {
         console.error('Error checking parking zone:', error.message);
@@ -96,7 +102,7 @@ const isInParkingZone = async (coordinates) => {
  */
 const isInChargingStation = async (coordinates) => {
     try {
-        const chargingStations = await geoData.getBikesInChargingStation();
+        const chargingStations = await getAllChargingStations();
         return chargingStations.some(station => geoData.isPointWithinGeometry(station.location, coordinates));
     } catch (error) {
         console.error('Error checking charging station:', error.message);
