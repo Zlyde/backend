@@ -27,6 +27,15 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.post('/', async (req, res) => {
+    try {
+        const newStation = await chargingStationService.addStation(req.body);
+        res.status(201).json(newStation);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
 // DELETE: Ta bort en laddstation
 router.delete('/:id', async (req, res) => {
     try {

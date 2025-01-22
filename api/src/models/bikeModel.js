@@ -32,6 +32,9 @@ const bikeSchema = new mongoose.Schema({
         max: [100, 'Battery level cannot be more than 100'] // Maximumvärde
     },
     last_service_date: Date,
+    message: {
+      type: String
+    },
     // parking_zone_id: {
     //     type: Number,
     //     default: null

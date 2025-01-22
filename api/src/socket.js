@@ -41,6 +41,10 @@ const initSocket = (server) => {
       io.emit('admin-trip-update', trip);
     })
 
+    socket.on('bike-update', (bike)=> {
+      io.emit('update-bike', (bike));
+    })
+
     socket.on('disconnect', () => {
       // console.log('Client disconnected:', socket.id)
     })

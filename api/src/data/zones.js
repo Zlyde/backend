@@ -16,6 +16,18 @@ const getAllParkingZones = async () => {
     }
 };
 
+const addZone = async (zoneData) => {
+    try {
+        const newZone = new ParkingZone(zoneData);
+        console.log("Added zone", newZone);
+        
+        return await newZone.save();
+    } catch (error) {
+        console.error("Error adding zone:", error.message);
+        throw new Error(error.message);
+    }
+};
+
 // Hämta en specifik parkeringszon baserat på ID
 const getParkingZoneById = async (id) => {
     try {
@@ -28,6 +40,21 @@ const getParkingZoneById = async (id) => {
         console.error(`Error fetching parking zone by ID ${id}:`, error.message);
         throw new Error(error.message);
     }
+};
+
+const updateZone = async (id, zoneData) => {
+  try {
+      const zoneUpdate = await ParkingZone.findOneAndUpdate(
+          { parking_zone_id: id }, // Anger vilket dokument som ska uppdateras
+          { $set: zoneData }, // Anger vad som ska uppdateras
+          { new: true, runValidators: true } // Returnera det uppdaterade dokumentet och kör validering
+      );
+      if (!zoneUpdate) throw new Error('City not found');
+      return zoneUpdate;
+  } catch (error) {
+      console.error(`Error updating city with ID ${id}:`, error.message);
+      throw new Error(error.message);
+  }
 };
 
 // Ta bort en parkeringszon
@@ -60,5 +87,7 @@ module.exports = {
     getAllParkingZones,
     getParkingZoneById,
     deleteParkingZone,
-    getBikesAtParkingZone
+    getBikesAtParkingZone,
+    updateZone,
+    addZone
 };
