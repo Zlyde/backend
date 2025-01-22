@@ -35,6 +35,12 @@ const bikeSchema = new mongoose.Schema({
     message: {
       type: String
     },
+    speed: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 20,
+    }
     // parking_zone_id: {
     //     type: Number,
     //     default: null
