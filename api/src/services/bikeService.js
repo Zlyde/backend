@@ -12,6 +12,11 @@
 
 const bikeData = require('../data/bikes');
 const chargingStationData = require('../data/stations');
+let io;
+
+const setSocketInstance = (IoInstance) => {
+  io = IoInstance
+}
 
 // Hämta alla cyklar
 const getAllBikes = async () => {
@@ -54,35 +59,49 @@ const addBike = async (bike) => {
 };
 
 // Uppdatera en cykel baserat på ID
-const updateBike = async (id, bikeDataToUpdate) => {
+const updateBike = async (id, updateData) => {
     try {
         // Validera status, om det anges
-        if (bikeDataToUpdate.status) {
+        if (updateData.status) {
             const validStatuses = ['available', 'in-use', 'charging', 'maintenance'];
-            if (!validStatuses.includes(bikeDataToUpdate.status)) {
-                throw new Error(`Invalid status: ${bikeDataToUpdate.status}. Valid statuses are: ${validStatuses.join(', ')}`);
+            if (!validStatuses.includes(updateData.status)) {
+                throw new Error(`Invalid status: ${updateData.status}. Valid statuses are: ${validStatuses.join(', ')}`);
             }
         }
 
         // Validera batterinivå, om det anges
-        if (bikeDataToUpdate.battery_level !== undefined) {
-            if (bikeDataToUpdate.battery_level < 0 || bikeDataToUpdate.battery_level > 100) {
+        if (updateData.battery_level !== undefined) {
+            if (updateData.battery_level < 0 || updateData.battery_level > 100) {
                 throw new Error('Battery level must be between 0 and 100.');
             }
         }
 
         // Validera koordinater, om det anges
-        if (bikeDataToUpdate.location && (!Array.isArray(bikeDataToUpdate.location.coordinates) || bikeDataToUpdate.location.coordinates.length !== 2)) {
+        if (updateData.location && (!Array.isArray(updateData.location.coordinates) || updateData.location.coordinates.length !== 2)) {
             throw new Error('Location coordinates must be an array with two numbers (longitude, latitude).');
         }
 
-        const updatedBike = await bikeData.updateBike(id, bikeDataToUpdate);
-        if (!updatedBike) {
-            throw new Error(`Bike with ID ${id} not found.`);
+        const bike = await getBikeById(id)
+        if (!bike) return
+        const updatedData = { ...updateData }
+        if (bike.status === 'in-use') {
+            updatedData.battery_level = (bike.battery_level || 0) - 0.25;
+            if (updatedData.battery_level <= 0) {
+                updatedData.battery_level = 0;
+                updatedData.status = 'maintenance';
+                updatedData.message = 'cyckel dead';
+            }
+    
+            updatedData.speed = bike.speed + (Math.random() - 0.5) * 1;
+            if (updatedData.speed < 0) updatedData.speed = 0;
+            if (updatedData.speed > 20) updatedData.speed = 20;
         }
 
         console.log(`Bike with ID ${id} successfully updated.`);
-        return updatedBike;
+        if (io) {
+          io.emit('bike-update', updatedData);
+        }
+        return await bikeData.updateBike(id, updatedData);;
     } catch (error) {
         console.error(`Error updating bike with ID ${id}:`, error.message);
         throw error;
@@ -105,5 +124,6 @@ module.exports = {
     getBikeById,
     addBike,
     updateBike,
-    deleteBike
+    deleteBike,
+    setSocketInstance
 };

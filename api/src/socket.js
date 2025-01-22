@@ -8,8 +8,6 @@ const initSocket = (server) => {
     },
   })
 
-  const roomIds = []
-
   io.on('connection', (socket) => {
     // console.log('Client connected:', socket.id)
 
@@ -18,18 +16,6 @@ const initSocket = (server) => {
       socket.join(roomName)
       // console.log(`${socket.id} joined room ${roomName}`)
       
-      if (!roomIds.includes(roomName)) {
-        roomIds.push(roomName);
-      }
-
-      io.emit('IDs-forAdmin', (roomIds))
-    })
-
-    socket.on('join-all-rooms', () => {
-      roomIds.forEach((roomId) => {
-        socket.join(roomId)
-        // console.log(roomIds)
-      })
     })
 
     socket.on('update-position', (trip)=> {

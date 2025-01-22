@@ -41,12 +41,11 @@ router.post('/', async (req, res) => {
 // PUT: Uppdatera en cykel
 router.put('/:id', async (req, res) => {
     try {
-        const bike = await bikeService.updateBike(req.params.id, req.body);
-        if (!bike) {
+        const bikeUpdate = await bikeService.updateBike(req.params.id, req.body);
+        if (!bikeUpdate) {
             return res.status(404).json({ error: 'Bike not found' });
         }
-        socket.emit('bike-update', bike)
-        res.status(200).json(bike);
+        res.status(200).json(bikeUpdate);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

@@ -16,12 +16,13 @@ const cors = require('cors')
 const passport = require('passport')
 require('./passport')
 const initSocket = require('./socket')
+const bikeService = require('./services/bikeService')
 const API_VERSION = require('./config/api_version'); // Importera API_VERSION
 
 const app = express();
 const server = http.createServer(app)
-const io = initSocket(server)
-
+const io = initSocket(server) 
+bikeService.setSocketInstance(io)
 
 // Middleware
 app.use(express.json()); // För att hantera JSON i förfrågningar
