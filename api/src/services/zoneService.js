@@ -22,6 +22,12 @@ const getAllParkingZones = async () => {
     return zones;
 };
 
+const addZone = async (data) => {
+  const newZone = await parkingZoneData.addZone(data);
+  console.log("New Trip", newZone);
+  return newZone;
+};
+
 // Hämta en specifik parkeringszon
 const getParkingZoneById = async (id) => {
     const zone = await parkingZoneData.getParkingZoneById(id);
@@ -29,6 +35,14 @@ const getParkingZoneById = async (id) => {
         throw new Error(`Parking zone with ID ${id} not found.`);
     }
     return zone;
+};
+
+const updateZone = async (id, data) => {
+  const city = await parkingZoneData.updateZone(id, data);
+  if (!city) {
+      throw new Error('City not found');
+  }
+  return city;
 };
 
 // Ta bort en parkeringszon
@@ -44,5 +58,7 @@ const deleteParkingZone = async (id) => {
 module.exports = {
     getAllParkingZones,
     getParkingZoneById,
-    deleteParkingZone
+    deleteParkingZone,
+    updateZone,
+    addZone
 };

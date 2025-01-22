@@ -21,9 +21,15 @@ const getAllChargingStations = async () => {
     return stations;
 };
 
+const addStation = async (data) => {
+  const newStation = await chargingStationData.addStation(data);
+  console.log("New Trip", newStation);
+  return newStation;
+};
+
 // Hämta en specifik laddstation
 const getChargingStationById = async (id) => {
-    const zstationone = await chargingStationData.getChargingStationById(id);
+    const station = await chargingStationData.getChargingStationById(id);
     if (!station) {
         throw new Error(`Charging station with ID ${id} not found.`);
     }
@@ -45,5 +51,6 @@ const deleteChargingStation = async (id) => {
 module.exports = {
     getAllChargingStations,
     getChargingStationById,
-    deleteChargingStation
+    deleteChargingStation,
+    addStation
 };

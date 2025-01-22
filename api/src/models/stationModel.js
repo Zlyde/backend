@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-sequence')(mongoose)
 
 const chargingStationSchema = new mongoose.Schema({
-    charging_statoin_id: { 
+    charging_station_id: { 
         type: Number, 
         unique: true,
         immutable: true, // Förhindrar att man kan ändra detta värde
@@ -14,11 +14,9 @@ const chargingStationSchema = new mongoose.Schema({
         type: {
             type: String,
             enum: ['Polygon', 'MultiPolygon'], // För geojson geometrier
-            required: true
         },
         coordinates: {
             type: [[[Number]]], // Array för Polygon och MultiPolygon
-            required: true
         }
     },
     // capacity: { type: Number, default: 0 },
@@ -27,7 +25,7 @@ const chargingStationSchema = new mongoose.Schema({
 });
 
 // Automatisk tilldelnign av ID
-chargingStationSchema.plugin(autoIncrement, {inc_field: 'charging_statoin_id'})
+chargingStationSchema.plugin(autoIncrement, {inc_field: 'charging_station_id'})
 
 // Skapa geospatialt index
 chargingStationSchema.index({ location: '2dsphere' })

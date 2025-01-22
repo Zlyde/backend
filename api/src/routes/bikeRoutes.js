@@ -5,6 +5,8 @@
 const express = require('express');
 const router = express.Router();
 const bikeService = require('../services/bikeService');
+const { io } = require('socket.io-client')
+const socket = io('http://localhost:5001')
 
 // GET: Hämta alla cyklar
 router.get('/', async (req, res) => {
@@ -39,11 +41,12 @@ router.post('/', async (req, res) => {
 // PUT: Uppdatera en cykel
 router.put('/:id', async (req, res) => {
     try {
-        const updatedBike = await bikeService.updateBike(req.params.id, req.body);
-        if (!updatedBike) {
+        const bike = await bikeService.updateBike(req.params.id, req.body);
+        if (!bike) {
             return res.status(404).json({ error: 'Bike not found' });
         }
-        res.status(200).json(updatedBike);
+        socket.emit('bike-update', bike)
+        res.status(200).json(bike);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
