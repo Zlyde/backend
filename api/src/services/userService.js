@@ -80,23 +80,6 @@ const updateUser = async (id, userDataToUpdate) => {
     }
 };
 
-// Fyll på saldo (prepaid)
-const addToBalance = async (id, amount) => {
-    if (amount <= 0) {
-        throw new Error('Amount must be greater than 0.');
-    }
-
-    const user = await getUserById(id);
-    if (user.preferred_payment_method !== 'prepaid') {
-        throw new Error('User does not use the prepaid payment method.');
-    }
-
-    user.account_balance += amount;
-
-    const updatedUser = await userData.updateUser(id, { account_balance: user.account_balance });
-    return updatedUser;
-};
-
 // Ta bort en användare
 const deleteUser = async (id) => {
     const deletedUser = await userData.deleteUser(id);
@@ -112,6 +95,5 @@ module.exports = {
     getAllUsers,
     getUserById,
     updateUser,
-    addToBalance,
     deleteUser
 };
