@@ -4,7 +4,7 @@
 
 const Bike = require('../models/bikeModel');
 
-// Validera om en cykel kan hyras´
+// Validera om en cykel kan hyras
 const validateBikeAvailability = async (bikeId) => {
     const bike = await Bike.findOne({ bike_id: bikeId });
     console.log("Bike fetched:", bike);

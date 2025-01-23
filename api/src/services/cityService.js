@@ -41,11 +41,11 @@ const getCityByQuery = async (query) => {
 
 // Uppdatera en stad
 const updateCity = async (id, data) => {
-    const city = await cityData.updateCity(id, data);
-    if (!city) {
+    const updatedCity = await cityData.updateCity(id, data);
+    if (!updatedCity) {
         throw new Error('City not found');
     }
-    return city;
+    return updatedCity;
   };
 
 // Ta bort en stad

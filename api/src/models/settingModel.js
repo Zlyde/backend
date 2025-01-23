@@ -1,4 +1,6 @@
-// src/models/settingModel.js
+/**
+ * src/models/bikeModel.js
+ */
 
 const mongoose = require('mongoose');
 

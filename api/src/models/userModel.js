@@ -1,4 +1,6 @@
-// src/models/userModel.js
+/**
+ * src/models/userModel.js
+ */
 
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-sequence')(mongoose)

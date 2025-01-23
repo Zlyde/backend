@@ -273,7 +273,7 @@ This endpoint leverages the `geoData` module to handle geographical operations. 
 
 #### Notes
 
-- The **`geoService.isPointWithinGeometry`** method is used internally by `geoData` to check if a bike's location falls within the specified city's boundary.
+- The **`geoData.isPointWithinGeometry`** method is used internally by `geoData` to check if a bike's location falls within the specified city's boundary.
 - The **`geoService.validateId`** method ensures that the provided city ID is not empty, malformed, or invalid.
 
 ## Invoice Endpoints
@@ -658,4 +658,3 @@ Ends a trip and calculates its duration and cost.
 | 404         | HTTP         | `No trips found for bike with ID {bikeId}`               | Triggered when no trips are associated with the bike.   |
 | 500         | Data         | `Error fetching trips: {error}`                          | Generic server error for fetching trip data.            |
 | 500         | Data         | `Error updating trip with ID {tripId}: {error}`          | Generic server error for updating trip data.            |
-

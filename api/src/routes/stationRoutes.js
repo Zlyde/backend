@@ -27,13 +27,23 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Lägg till en ny laddstation
+// POST: Lägg till en ny laddstation
 router.post('/', async (req, res) => {
     try {
-        const newStation = await chargingStationService.addStation(req.body);
+        const newStation = await chargingStationService.addChargingStation(req.body);
         res.status(201).json(newStation);
     } catch (err) {
         res.status(400).json({ error: err.message });
+    }
+});
+
+// PUT: Uppdatera en laddstation
+router.put('/:id', async (req, res) => {
+    try {
+        const updatedStation = await chargingStationService.updateChargingStation(req.params.id, req.body);
+        res.status(200).json(updatedStation);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 

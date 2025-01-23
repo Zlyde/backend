@@ -16,18 +16,6 @@ const getAllChargingStations = async () => {
     }
 };
 
-const addStation = async (stationData) => {
-    try {
-        const newStation = new ChargingStation(stationData);
-        console.log("Added station", newStation);
-        
-        return await newStation.save();
-    } catch (error) {
-        console.error("Error adding station:", error.message);
-        throw new Error(error.message);
-    }
-};
-
 // Hämta en specifik laddstation
 const getChargingStationById = async (id) => {
     try {
@@ -100,7 +88,8 @@ const getBikesAtChargingStation = async (stationId) => {
 module.exports = {
     getAllChargingStations,
     getChargingStationById,
+    addChargingStation,
+    updateChargingStation,
     deleteChargingStation,
-    getBikesAtChargingStation,
-    addStation
+    getBikesAtChargingStation
 };

@@ -39,8 +39,8 @@ router.get('/:query', async (req, res) => {
 // PUT: Uppdatera en stad
 router.put('/:id', async (req, res) => {
     try {
-        const city = await cityService.updateCity(req.params.id, req.body);
-        res.status(200).json(city);
+        const updatedCity = await cityService.updateCity(req.params.id, req.body);
+        res.status(200).json(updatedCity);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

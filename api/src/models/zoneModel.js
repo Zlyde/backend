@@ -1,4 +1,6 @@
-// src/models/zoneModel.js
+/**
+ * src/models/zoneModel.js
+ */
 
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-sequence')(mongoose)

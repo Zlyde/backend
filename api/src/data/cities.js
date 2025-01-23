@@ -32,21 +32,6 @@ const getCityById = async (id) => {
     }
 };
 
-const updateCity = async (id, cityData) => {
-  try {
-      const cityUpdate = await City.findOneAndUpdate(
-          { city_id: id }, // Anger vilket dokument som ska uppdateras
-          { $set: cityData }, // Anger vad som ska uppdateras
-          { new: true, runValidators: true } // Returnera det uppdaterade dokumentet och kör validering
-      );
-      if (!cityUpdate) throw new Error('City not found');
-      return cityUpdate;
-  } catch (error) {
-      console.error(`Error updating city with ID ${id}:`, error.message);
-      throw new Error(error.message);
-  }
-};
-
 // Hämta en specifik stad baserat på sökord
 const getCityByQuery = async (query) => {
     try {
@@ -72,6 +57,22 @@ const getCityByName = async (name) => {
     }
 };
 
+// Uppdatera en stad
+const updateCity = async (id, cityData) => {
+    try {
+        const updatedCity = await City.findOneAndUpdate(
+            { city_id: id }, // Anger vilket dokument som ska uppdateras
+            { $set: cityData }, // Anger vad som ska uppdateras
+            { new: true, runValidators: true } // Returnera det uppdaterade dokumentet och kör validering
+        );
+        if (!updatedCity) throw new Error('City not found');
+        return updatedCity;
+    } catch (error) {
+        console.error(`Error updating city with ID ${id}:`, error.message);
+        throw new Error(error.message);
+    }
+  };
+
 // Ta bort en stad
 const deleteCity = async (id) => {
     try {
@@ -86,12 +87,11 @@ const deleteCity = async (id) => {
     }
 };
 
-
 module.exports = {
     getAllCities,
     getCityById,
     getCityByQuery,
     getCityByName,
-    deleteCity,
-    updateCity
+    updateCity,
+    deleteCity
 };

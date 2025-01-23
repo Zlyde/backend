@@ -1,5 +1,6 @@
-// src/models/cityModel.js
-
+/**
+ * src/models/cityModel.js
+ */
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-sequence')(mongoose)
 

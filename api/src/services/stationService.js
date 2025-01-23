@@ -21,12 +21,6 @@ const getAllChargingStations = async () => {
     return stations;
 };
 
-const addStation = async (data) => {
-  const newStation = await chargingStationData.addStation(data);
-  console.log("New Trip", newStation);
-  return newStation;
-};
-
 // Hämta en specifik laddstation
 const getChargingStationById = async (id) => {
     const station = await chargingStationData.getChargingStationById(id);
@@ -34,6 +28,22 @@ const getChargingStationById = async (id) => {
         throw new Error(`Charging station with ID ${id} not found.`);
     }
     return station;
+};
+
+// Lägg till en ny laddstation
+const addChargingStation = async (data) => {
+  const newStation = await chargingStationData.addChargingStation(data);
+  console.log("New Station", newStation);
+  return newStation;
+};
+
+// Uppdatera en laddstation
+const updateChargingStation = async (id, data) => {
+    const updatedStation = await chargingStationData.updateChargingStation(id, data);
+    if (!updatedStation) {
+        throw new Error(`Charging station with ID ${id} not found.`);
+    }
+    return updatedStation;
 };
 
 // Ta bort en laddstation
@@ -46,11 +56,11 @@ const deleteChargingStation = async (id) => {
     return deletedStation;
 };
 
-
 // Exportera alla funktioner
 module.exports = {
     getAllChargingStations,
     getChargingStationById,
-    deleteChargingStation,
-    addStation
+    addChargingStation,
+    updateChargingStation,
+    deleteChargingStation
 };

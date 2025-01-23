@@ -27,24 +27,24 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// PUT: Uppdatera en parkeringszon
-router.put('/:id', async (req, res) => {
-  try {
-      const zone = await parkingZoneService.updateZone(req.params.id, req.body);
-      res.status(200).json(zone);
-  } catch (err) {
-      res.status(500).json({ error: err.message });
-  }
-});
-
 // Lägg till en ny parkeringszon
 router.post('/', async (req, res) => {
     try {
-        const newZone = await parkingZoneService.addZone(req.body);
+        const newZone = await parkingZoneService.addParkingZone(req.body);
         res.status(201).json(newZone);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
+});
+
+// PUT: Uppdatera en parkeringszon
+router.put('/:id', async (req, res) => {
+  try {
+      const updatedZone = await parkingZoneService.updateParkingZone(req.params.id, req.body);
+      res.status(200).json(updatedZone);
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
 });
 
 // DELETE: Ta bort en parkeringszon

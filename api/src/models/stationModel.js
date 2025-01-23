@@ -19,8 +19,6 @@ const chargingStationSchema = new mongoose.Schema({
             type: [[[Number]]], // Array för Polygon och MultiPolygon
         }
     },
-    // capacity: { type: Number, default: 0 },
-    // bikes_charging: { type: Number, default: 0 },
     city_id: Number,
 });
 

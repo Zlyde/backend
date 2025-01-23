@@ -1,4 +1,6 @@
-// src/models/bikeModel.js
+/**
+ * src/models/bikeModel.js
+ */
 
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-sequence')(mongoose)
@@ -41,14 +43,6 @@ const bikeSchema = new mongoose.Schema({
       min: 0,
       max: 20,
     }
-    // parking_zone_id: {
-    //     type: Number,
-    //     default: null
-    // },
-    // charging_station_id: {
-    //     type: Number,
-    //     default: null
-    // }
 }, { timestamps: true });
 
 // Automatisk tilldelnign av ID

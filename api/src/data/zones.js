@@ -16,18 +16,6 @@ const getAllParkingZones = async () => {
     }
 };
 
-const addZone = async (zoneData) => {
-    try {
-        const newZone = new ParkingZone(zoneData);
-        console.log("Added zone", newZone);
-        
-        return await newZone.save();
-    } catch (error) {
-        console.error("Error adding zone:", error.message);
-        throw new Error(error.message);
-    }
-};
-
 // Hämta en specifik parkeringszon baserat på ID
 const getParkingZoneById = async (id) => {
     try {
@@ -42,15 +30,29 @@ const getParkingZoneById = async (id) => {
     }
 };
 
-const updateZone = async (id, zoneData) => {
+// Lägg till en ny parkeringszon
+const addParkingZone = async (zoneData) => {
+    try {
+        const newZone = new ParkingZone(zoneData);
+        console.log("Added zone", newZone);
+        
+        return await newZone.save();
+    } catch (error) {
+        console.error("Error adding zone:", error.message);
+        throw new Error(error.message);
+    }
+};
+
+// Uppdatera en parkeringszon
+const updateParkingZone = async (id, zoneData) => {
   try {
-      const zoneUpdate = await ParkingZone.findOneAndUpdate(
+      const updatedZone = await ParkingZone.findOneAndUpdate(
           { parking_zone_id: id }, // Anger vilket dokument som ska uppdateras
           { $set: zoneData }, // Anger vad som ska uppdateras
           { new: true, runValidators: true } // Returnera det uppdaterade dokumentet och kör validering
       );
-      if (!zoneUpdate) throw new Error('City not found');
-      return zoneUpdate;
+      if (!updatedZone) throw new Error('City not found');
+      return updatedZone;
   } catch (error) {
       console.error(`Error updating city with ID ${id}:`, error.message);
       throw new Error(error.message);
@@ -86,8 +88,8 @@ const getBikesAtParkingZone = async (zoneId) => {
 module.exports = {
     getAllParkingZones,
     getParkingZoneById,
+    addParkingZone,
+    updateParkingZone,
     deleteParkingZone,
-    getBikesAtParkingZone,
-    updateZone,
-    addZone
+    getBikesAtParkingZone
 };

@@ -1,4 +1,6 @@
-// src/models/tripModel.js
+/**
+ * src/models/tripModel.js
+ */
 
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-sequence')(mongoose)

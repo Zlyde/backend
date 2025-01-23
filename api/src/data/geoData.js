@@ -1,6 +1,7 @@
 /**
  * src/data/geoData.js
  */
+
 const turf = require('@turf/turf');
 const mongoose = require('mongoose');
 const Bike = require('../models/bikeModel');
