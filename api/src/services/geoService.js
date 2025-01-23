@@ -24,9 +24,13 @@ const validateId = (id, type) => {
  */
 const getBikesInCity = async (cityId) => {
     try {
+        // Validera cityId
         validateId(cityId, 'City');
 
+        // Hämta cyklar från geoData
         const bikes = await geoData.getBikesInCity(cityId);
+
+        // Kontrollera om några cyklar hittades
         if (!bikes || bikes.length === 0) {
             throw new Error(`No bikes found in city with ID ${cityId}`);
         }

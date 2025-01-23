@@ -51,25 +51,15 @@ router.get('/:id/bikes', async (req, res) => {
     const cityId = req.params.id;
 
     try {
-        // Validera att cityId är tillgängligt och giltigt
-        if (!cityId || isNaN(cityId)) {
-            return res.status(400).json({ error: 'Invalid city ID' });
-        }
-
-        // Använd getBikesInCity från geoData för att hämta cyklar
-        const bikes = await geoData.getBikesInCity(cityId);
-
-        // Kontrollera om några cyklar hittades
-        if (!bikes || bikes.length === 0) {
-            return res.status(404).json({ error: `No bikes found in city with ID ${cityId}` });
-        }
+        // Anropa geoService för att hantera logiken
+        const bikes = await geoService.getBikesInCity(cityId);
 
         // Returnera cyklarna
         res.status(200).json({ bikes });
     } catch (error) {
-        // Hantera olika typer av fel från geoData
         console.error(`Error fetching bikes for city with ID ${cityId}:`, error.message);
 
+        // Hantera fel baserat på typ
         if (error.message.includes('not found')) {
             return res.status(404).json({ error: error.message });
         }
