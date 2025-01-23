@@ -6,7 +6,6 @@ const express = require("express");
 const router = express.Router();
 const geoService = require("../services/geoService");
 const cityService = require("../services/cityService");
-const geoData = require("../data/geoData");
 
 // GET: Hämta alla städer
 router.get("/", async (req, res) => {

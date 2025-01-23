@@ -11,7 +11,6 @@
  */
 
 const bikeData = require("../data/bikes");
-const chargingStationData = require("../data/stations");
 let io;
 
 const setSocketInstance = (IoInstance) => {

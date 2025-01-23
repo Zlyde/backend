@@ -10,7 +10,11 @@ export default [
     languageOptions: {
       sourceType: "commonjs",
       ecmaVersion: 2021,
-      globals: { ...globals.browser, ...globals.node },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.jest,
+      },    
     },
     plugins: {
       prettier: pluginPrettier,

@@ -8,7 +8,6 @@
  */
 
 const turf = require("@turf/turf");
-const mongoose = require("mongoose");
 const Bike = require("../models/bikeModel");
 const ChargingStation = require("../models/stationModel");
 const ParkingZone = require("../models/zoneModel");
