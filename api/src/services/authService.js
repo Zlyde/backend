@@ -46,18 +46,18 @@ const auth = {
       if (!matchPassword) return res.status(401).json({ message: 'Wrong password' });
   
       // Inkludera userId och email i token-payload
-      const payload = { userId: user.user_id, email: user.email };
+      const payload = { user_id: user.user_id, email: user.email };
       const token = jwt.sign(payload, jwtSecret, { expiresIn: '24h' });
   
       return res.json({
         message: 'User logged in successfully',
         token: token, // Skicka JWT-token
         user: {
-          userId: user.user_id, // Skicka userId
+          user_id: user.user_id, // Skicka userId
           name: user.name,
           email: user.email,
           role: user.role,
-          accountBalance: user.account_balance,
+          account_balance: user.account_balance,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
         },
