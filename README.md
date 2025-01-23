@@ -1,3 +1,6 @@
 # elspark-backend
 
-namechange
+Testa backend:
+
+npm install --save-dev jest    
+npm test
