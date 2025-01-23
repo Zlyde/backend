@@ -36,6 +36,16 @@ router.get('/:query', async (req, res) => {
   }
 });
 
+// PUT: Uppdatera en stad
+router.put('/:id', async (req, res) => {
+    try {
+        const city = await cityService.updateCity(req.params.id, req.body);
+        res.status(200).json(city);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // GET: Hämta alla cyklar inom en viss stad
 router.get('/:id/bikes', async (req, res) => {
     const cityId = req.params.id;
@@ -68,16 +78,6 @@ router.get('/:id/bikes', async (req, res) => {
         }
 
         res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// PUT: Uppdatera en stad
-router.put('/:id', async (req, res) => {
-    try {
-        const city = await cityService.updateCity(req.params.id, req.body);
-        res.status(200).json(city);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
     }
 });
 

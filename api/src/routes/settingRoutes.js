@@ -12,7 +12,7 @@ const express = require('express');
 const router = express.Router();
 const settingService = require('../services/settingService');
 
-// Hämta inställningar
+// GET: Hämta inställningar
 router.get('/', async (req, res) => {
     try {
         const settings = await settingService.getSettings();
@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Uppdatera inställningar
+// PUT: Uppdatera inställningar
 router.put('/', async (req, res) => {
     try {
         const settingsToUpdate = req.body;
@@ -35,7 +35,7 @@ router.put('/', async (req, res) => {
     }
 });
 
-// Återställ inställningar till standardvärden
+// PUT: Återställ inställningar till standardvärden
 router.put('/reset', async (req, res) => {
     try {
         const resetSettings = await settingService.resetSettings();

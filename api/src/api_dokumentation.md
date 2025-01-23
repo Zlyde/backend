@@ -7,12 +7,12 @@
   - [Add a new bike](#add-a-new-bike)
   - [Update a bike](#update-a-bike)
   - [Delete a bike](#delete-a-bike)
-  - [Error and Response Codes](#error-and-response-codes)
+  - [Bike Error and Response Codes](#bike-error-and-response-codes)
 - [Cities](#cities)
   - [Get all cities](#get-all-cities)
   - [Get city by ID or name](#get-city-by-id-or-name)
   - [Get bikes in a city](#get-bikes-in-a-city)
-  - [Error and Response Codes](#error-and-response-codes)
+  - [City Error and Response Codes](#city-error-and-response-codes)
 - [Invoices](#invoices)
   - [Get all invoices](#get-all-invoices)
   - [Get invoice by ID](#get-invoice-by-id)
@@ -55,12 +55,12 @@ The API handles bike-related operations, including creating, updating, retrievin
 ---
 
 ### Get all bikes
-**Endpoint**: `GET /api/bike`  
+**Endpoint**: `GET /api/{version}/bike`  
 Fetches all bikes in the system.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5001/api/bike`  
+- **URL**: `http://localhost:5001/api/{version}/bike`  
 - **Body**: None  
 
 #### Response Example
@@ -82,23 +82,23 @@ Fetches all bikes in the system.
 ---
 
 ### Get bike by ID
-**Endpoint**: `GET /api/bike/:id`  
+**Endpoint**: `GET /api/{version}/bike/:id`  
 Fetches a specific bike by its ID.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5001/api/bike/:id`  
+- **URL**: `http://localhost:5001/api/{version}/bike/:id`  
 - **Path Parameter**: `id` (The ID of the bike)  
 
 ---
 
 ### Add a new bike
-**Endpoint**: `POST /api/bike`  
+**Endpoint**: `POST /api/{version}/bike`  
 Adds a new bike. If no `location` is provided, defaults to `[0, 0]`.
 
 #### Testing with Postman
 - **Method**: POST  
-- **URL**: `http://localhost:5001/api/bike`  
+- **URL**: `http://localhost:5001/api/{version}/bike`  
 - **Body (JSON)**:
 ```json
 {
@@ -111,12 +111,12 @@ Adds a new bike. If no `location` is provided, defaults to `[0, 0]`.
 ---
 
 ### Update a bike
-**Endpoint**: `PUT /api/bike/:id`  
+**Endpoint**: `PUT /api/{version}/bike/:id`  
 Updates a specific bike by its ID.
 
 #### Testing with Postman
 - **Method**: PUT  
-- **URL**: `http://localhost:5001/api/bike/:id`  
+- **URL**: `http://localhost:5001/api/{version}/bike/:id`  
 - **Path Parameter**: `id` (The ID of the bike)  
 - **Body (JSON)**:
 ```json
@@ -134,12 +134,12 @@ Deletes a specific bike by its ID.
 
 #### Testing with Postman
 - **Method**: DELETE  
-- **URL**: `http://localhost:5001/api/bike/:id`  
+- **URL**: `http://localhost:5001/api/{version}/bike/:id`  
 - **Path Parameter**: `id` (The ID of the bike)  
 
 ---
 
-### Error and Response Codes
+### Bike Error and Response Codes
 
 | HTTP Status | Layer        | Message/Description                                                       | Notes                                                 |
 |-------------|--------------|---------------------------------------------------------------------------|-------------------------------------------------------|
@@ -164,12 +164,12 @@ The API handles city-related operations, including creating, updating, retrievin
 ---
 
 ### Get all cities
-**Endpoint**: `GET /api/city`  
+**Endpoint**: `GET /api/{version}/city`  
 Fetches all cities in the system.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5001/api/city`  
+- **URL**: `http://localhost:5001/api/{version}/city`  
 - **Body**: None  
 
 #### Response Example
@@ -194,29 +194,30 @@ Fetches all cities in the system.
 ---
 
 ### Get city by ID or name
-**Endpoint**: `GET /api/city/:query`  
+**Endpoint**: `GET /api/{version}/city/:query`  
 Fetches a specific city by its ID or name.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5001/api/city/:query`  
+- **URL**: `http://localhost:5001/api/{version}/city/:query`  
 - **Path Parameter**: `query` (City ID as a number or city name as a string)  
 
 ---
 
 ### Get bikes in a city
-**Endpoint**: `GET /api/city/:id/bikes`  
+**Endpoint**: `GET /api/{version}/city/:id/bikes`  
 Fetches all bikes within a specific city's boundaries.
 
 #### Dependencies
-This endpoint leverages the `geoService` and `geoData` modules to handle geographical operations. These modules provide the following functionalities:
-- **Validation**: Ensures the city ID is valid using `geoService.validateId`.
-- **Data Retrieval**: Fetches bikes within the specified city boundary using `geoData.getBikesInCity` and `geoData.getBikesWithinArea`.
+This endpoint leverages the `geoData` module to handle geographical operations. The following functionalities are used:
+
+- **Validation**: Ensures the city ID is valid and exists using the `City` model and MongoDB queries. 
+- **Data Retrieval**: Fetches bikes within the specified city’s boundary using `geoData.getBikesInCity`. 
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5001/api/city/:id/bikes`  
-- **Path Parameter**: `id` (The ID of the city)  
+- **URL**: `http://localhost:5001/api/{version}/city/:id/bikes`  
+- **Path Parameter**: `id` (The ID of the city). Must be a valid numeric ID. 
 
 #### Response Example
 **Success**
@@ -254,17 +255,21 @@ This endpoint leverages the `geoService` and `geoData` modules to handle geograp
 
 ---
 
-### Error and Response Codes
+### City Error and Response Codes
 
 | HTTP Status | Layer        | Message/Description                                         | Notes                                                  |
 |-------------|--------------|------------------------------------------------------------|--------------------------------------------------------|
 | 200         | HTTP         | `Success`                                                 | Returned when a GET request succeeds.                 |
 | 400         | Service      | `Validation error: City boundary is not defined`          | Triggered when a city lacks a defined boundary.        |
+| 400         | HTTP         | `Invalid city ID`                                         | Triggered when the provided city ID is missing or invalid. |
 | 404         | HTTP         | `City with ID {id} not found.`                             | Triggered when a city with the specified ID does not exist. |
 | 404         | HTTP         | `City not found.`                                          | Triggered when no city matches the given query.        |
 | 404         | HTTP         | `No bikes found in city with ID {id}`                     | Triggered when no bikes are located within the city boundary. |
+| 404         | Service      | `{type} with ID {id} not found`                           | Triggered when a specified type (City, Charging Station, Parking Zone) does not exist. |
+| 500         | Data         | `Error fetching bikes in {type.toLowerCase()} with ID {id}: {error}` | Generic error when fetching bikes for a specific type fails. |
 | 500         | Data         | `Error fetching cities: {error}`                          | Generic server error for fetching data.                |
 | 500         | Data         | `Error fetching bikes within area: {error}`               | Generic server error for geographical data fetching.   |
+| 500         | HTTP         | `Internal server error`                                   | Generic error when an unexpected issue occurs.         |
 
 #### Notes
 
@@ -284,45 +289,45 @@ The API manages invoice-related operations, including creating, updating, retrie
 ---
 
 ### Get all invoices
-**Endpoint**: `GET /api/invoice`  
+**Endpoint**: `GET /api/{version}/invoice`  
 Fetches all invoices in the system.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5001/api/invoice`  
+- **URL**: `http://localhost:5001/api/{version}/invoice`  
 - **Body**: None  
 
 ---
 
 ### Get invoice by ID
-**Endpoint**: `GET /api/invoice/:invoiceId`  
+**Endpoint**: `GET /api/{version}/invoice/:invoiceId`  
 Fetches a specific invoice by its ID.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5001/api/invoice/:invoiceId`  
+- **URL**: `http://localhost:5001/api/{version}/invoice/:invoiceId`  
 - **Path Parameter**: `invoiceId` (The ID of the invoice)  
 
 ---
 
 ### Get all invoices for a user
-**Endpoint**: `GET /api/invoice/user/:userId`  
+**Endpoint**: `GET /api/{version}/invoice/user/:userId`  
 Fetches all invoices associated with a specific user.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5000/api/invoice/user/:userId`  
+- **URL**: `http://localhost:5000/api/{version}/invoice/user/:userId`  
 - **Path Parameter**: `userId` (The ID of the user)  
 
 ---
 
 ### Create a new invoice
-**Endpoint**: `POST /api/invoice/create`  
+**Endpoint**: `POST /api/{version}/invoice/create`  
 Creates a new invoice for a completed trip.
 
 #### Testing with Postman
 - **Method**: POST  
-- **URL**: `http://localhost:5000/api/invoice/create`  
+- **URL**: `http://localhost:5000/api/{version}/invoice/create`  
 - **Body (JSON)**:
 ```json
 {
@@ -334,12 +339,12 @@ Creates a new invoice for a completed trip.
 ---
 
 ### Mark an invoice as paid
-**Endpoint**: `PUT /api/invoice/pay/:invoiceId`  
+**Endpoint**: `PUT /api/{version}/invoice/pay/:invoiceId`  
 Marks a specific invoice as paid and updates the payment method.
 
 #### Testing with Postman
 - **Method**: PUT  
-- **URL**: `http://localhost:5000/api/invoice/pay/:invoiceId`  
+- **URL**: `http://localhost:5000/api/{version}/invoice/pay/:invoiceId`  
 - **Path Parameter**: `invoiceId` (The ID of the invoice)  
 - **Body (JSON)**:
 ```json

@@ -68,5 +68,5 @@ const resetSettings = async () => {
 module.exports = {
     getSettings,
     updateSettings,
-    resetSettings,
+    resetSettings
 };

@@ -2,10 +2,10 @@
  * src/data/tripHelpers.js
  */
 
-// Validera om en cykel kan hyras
+const Bike = require('../models/bikeModel');
 
+// Validera om en cykel kan hyras´
 const validateBikeAvailability = async (bikeId) => {
-    const Bike = require('../models/bikeModel');
     const bike = await Bike.findOne({ bike_id: bikeId });
     console.log("Bike fetched:", bike);
     if (!bike) {
@@ -37,7 +37,14 @@ const calculateTripDuration = (startTime, endTime) => {
     if (!startTime || !endTime) {
         throw new Error('Start time and end time are required to calculate duration.');
     }
-    return Math.floor((endTime - startTime) / 1000); // Varaktighet i sekunder
+
+    // Skillnad i millisekunder
+    const durationMs = endTime - startTime;
+
+    // Konvertera till minuter och runda upp till närmsta minut
+    const durationMinutes = Math.ceil(durationMs / (1000 * 60));
+
+    return durationMinutes; // Antal minuter, avrundat
 };
 
 // Uppdatera cykelstatus
