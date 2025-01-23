@@ -1,10 +1,15 @@
+/**
+ * GeoService - Modul för att hantera geografisk data och relaterade operationer
+ * ---------------------------------------------------------------
+ * Denna fil innehåller funktioner för att:
+ * - Validera ID:n för olika geografiska objekt.
+ * - Hämta cyklar inom definierade områden (stad, laddstation, parkeringszon).
+ * - Kontrollera om en punkt är inom en parkeringszon eller laddstation.
+ */
+
 const geoData = require('../data/geoData');
-const {
-    getAllParkingZones,
-} = require('../data/zones');
-const {
-    getAllChargingStations,
-} = require('../data/stations');
+const { getAllParkingZones } = require('../data/zones');
+const { getAllChargingStations } = require('../data/stations');
 
 /**
  * Validera ID

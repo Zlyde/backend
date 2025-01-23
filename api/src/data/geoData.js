@@ -1,5 +1,10 @@
 /**
- * src/data/geoData.js
+ * GeoData - Hanterar geografisk data och operationer
+ * -------------------------------------------------
+ * Denna modul innehåller funktioner för att:
+ * - Kontrollera om en punkt är inom ett geografiskt område.
+ * - Hämta cyklar inom definierade geografiska områden (stad, laddstation, parkeringszon).
+ * - Utföra generella geografiska operationer.
  */
 
 const turf = require('@turf/turf');
@@ -114,4 +119,5 @@ module.exports = {
     getBikesInCity,
     getBikesInChargingStation,
     getBikesInParkingZone,
+    getBikesInDefinedArea,
 };
