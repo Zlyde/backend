@@ -7,12 +7,12 @@
  * - Utföra generella geografiska operationer.
  */
 
-const turf = require('@turf/turf');
-const mongoose = require('mongoose');
-const Bike = require('../models/bikeModel');
-const ChargingStation = require('../models/stationModel');
-const ParkingZone = require('../models/zoneModel');
-const City = require('../models/cityModel');
+const turf = require("@turf/turf");
+const mongoose = require("mongoose");
+const Bike = require("../models/bikeModel");
+const ChargingStation = require("../models/stationModel");
+const ParkingZone = require("../models/zoneModel");
+const City = require("../models/cityModel");
 
 /**
  * Kontrollera om en punkt (koordinater) är inom ett område (GeoJSON)
@@ -21,17 +21,17 @@ const City = require('../models/cityModel');
  * @returns {Boolean} - True om punkten är inom området, annars false
  */
 const isPointWithinGeometry = (geometry, pointCoords) => {
-    try {
-        // Create GeoJSON objects for the point and the polygon
-        const turfPoint = turf.point(pointCoords);
-        const turfPolygon = turf.polygon(geometry.coordinates);
+  try {
+    // Create GeoJSON objects for the point and the polygon
+    const turfPoint = turf.point(pointCoords);
+    const turfPolygon = turf.polygon(geometry.coordinates);
 
-        // Check if the point is within the polygon
-        return turf.booleanPointInPolygon(turfPoint, turfPolygon);
-    } catch (error) {
-        console.error('Error in isPointWithinGeometry:', error.message);
-        throw error;
-    }
+    // Check if the point is within the polygon
+    return turf.booleanPointInPolygon(turfPoint, turfPolygon);
+  } catch (error) {
+    console.error("Error in isPointWithinGeometry:", error.message);
+    throw error;
+  }
 };
 
 /**
@@ -40,20 +40,20 @@ const isPointWithinGeometry = (geometry, pointCoords) => {
  * @returns {Array} - Lista med cyklar
  */
 const getBikesWithinArea = async (geometry) => {
-    try {
-        const bikes = await Bike.find({
-            location: {
-                $geoWithin: {
-                    $geometry: geometry,
-                },
-            },
-        });
+  try {
+    const bikes = await Bike.find({
+      location: {
+        $geoWithin: {
+          $geometry: geometry,
+        },
+      },
+    });
 
-        return bikes;
-    } catch (error) {
-        console.error('Error fetching bikes within area:', error.message);
-        throw error;
-    }
+    return bikes;
+  } catch (error) {
+    console.error("Error fetching bikes within area:", error.message);
+    throw error;
+  }
 };
 
 /**
@@ -64,26 +64,31 @@ const getBikesWithinArea = async (geometry) => {
  * @returns {Array} - Lista med cyklar
  */
 const getBikesInDefinedArea = async (id, model, type) => {
-    try {
-        const area = await model.findOne({ [`${type.toLowerCase()}_id`]: id });
-        console.log("Area:", area);
+  try {
+    const area = await model.findOne({ [`${type.toLowerCase()}_id`]: id });
+    console.log("Area:", area);
 
-        if (!area) {
-            throw new Error(`${type} with ID ${id} not found`);
-        }
-
-        if (!area.boundary && !area.location) {
-            throw new Error(`${type} with ID ${id} does not have a defined boundary or location`);
-        }
-
-        const geometry = area.boundary || area.location; // Prioritera boundary för städer, location för andra
-        console.log("Geometry:", geometry);
-        
-        return await getBikesWithinArea(geometry);
-    } catch (error) {
-        console.error(`Error fetching bikes in ${type.toLowerCase()} with ID ${id}:`, error.message);
-        throw error;
+    if (!area) {
+      throw new Error(`${type} with ID ${id} not found`);
     }
+
+    if (!area.boundary && !area.location) {
+      throw new Error(
+        `${type} with ID ${id} does not have a defined boundary or location`,
+      );
+    }
+
+    const geometry = area.boundary || area.location; // Prioritera boundary för städer, location för andra
+    console.log("Geometry:", geometry);
+
+    return await getBikesWithinArea(geometry);
+  } catch (error) {
+    console.error(
+      `Error fetching bikes in ${type.toLowerCase()} with ID ${id}:`,
+      error.message,
+    );
+    throw error;
+  }
 };
 
 /**
@@ -92,7 +97,7 @@ const getBikesInDefinedArea = async (id, model, type) => {
  * @returns {Array} - Lista med cyklar
  */
 const getBikesInCity = async (cityId) => {
-    return getBikesInDefinedArea(cityId, City, 'City');
+  return getBikesInDefinedArea(cityId, City, "City");
 };
 
 /**
@@ -101,7 +106,7 @@ const getBikesInCity = async (cityId) => {
  * @returns {Array} - Lista med cyklar
  */
 const getBikesInChargingStation = async (stationId) => {
-    return getBikesInDefinedArea(stationId, ChargingStation, 'charging_station');
+  return getBikesInDefinedArea(stationId, ChargingStation, "charging_station");
 };
 
 /**
@@ -110,14 +115,14 @@ const getBikesInChargingStation = async (stationId) => {
  * @returns {Array} - Lista med cyklar
  */
 const getBikesInParkingZone = async (zoneId) => {
-    return getBikesInDefinedArea(zoneId, ParkingZone, 'parking_zone');
+  return getBikesInDefinedArea(zoneId, ParkingZone, "parking_zone");
 };
 
 module.exports = {
-    isPointWithinGeometry,
-    getBikesWithinArea,
-    getBikesInCity,
-    getBikesInChargingStation,
-    getBikesInParkingZone,
-    getBikesInDefinedArea,
+  isPointWithinGeometry,
+  getBikesWithinArea,
+  getBikesInCity,
+  getBikesInChargingStation,
+  getBikesInParkingZone,
+  getBikesInDefinedArea,
 };
