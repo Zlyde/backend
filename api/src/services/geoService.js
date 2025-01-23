@@ -49,9 +49,13 @@ const getBikesInCity = async (cityId) => {
  */
 const getBikesInChargingStation = async (stationId) => {
     try {
+        // Validera stationId
         validateId(stationId, 'Charging station');
 
+        // Hämta cyklar från geoData
         const bikes = await geoData.getBikesInChargingStation(stationId);
+
+        // Kontrollera om några cyklar hittades
         if (!bikes || bikes.length === 0) {
             throw new Error(`No bikes found in charging station with ID ${stationId}`);
         }
@@ -70,9 +74,13 @@ const getBikesInChargingStation = async (stationId) => {
  */
 const getBikesInParkingZone = async (zoneId) => {
     try {
+        // Validera zoneId
         validateId(zoneId, 'Parking zone');
 
+        // Hämta cyklar från geoData
         const bikes = await geoData.getBikesInParkingZone(zoneId);
+
+        // Kontrollera om några cyklar hittades
         if (!bikes || bikes.length === 0) {
             throw new Error(`No bikes found in parking zone with ID ${zoneId}`);
         }

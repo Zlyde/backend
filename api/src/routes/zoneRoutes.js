@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const parkingZoneService = require('../services/zoneService');
-const geoData = require('../data/geoData');
+const geoService = require('../services/geoService');
 
 // GET: Hämta alla parkeringszoner
 router.get('/', async (req, res) => {
@@ -63,25 +63,15 @@ router.get('/:id/bikes', async (req, res) => {
     const zoneId = req.params.id;
 
     try {
-        // Validera att zoneId är tillgängligt och giltigt
-        if (!zoneId || isNaN(zoneId)) {
-            return res.status(400).json({ error: 'Invalid parking zone ID' });
-        }
-
-        // Använd getBikesInParkingZone från geoData för att hämta cyklar
-        const bikes = await geoData.getBikesInParkingZone(zoneId);
-
-        // Kontrollera om några cyklar hittades
-        if (!bikes || bikes.length === 0) {
-            return res.status(404).json({ error: `No bikes found in parking zone with ID ${zoneId}` });
-        }
+        // Anropa geoService för att hantera logiken
+        const bikes = await geoService.getBikesInParkingZone(zoneId);
 
         // Returnera cyklarna
         res.status(200).json({ bikes });
     } catch (error) {
-        // Hantera olika typer av fel från geoData
         console.error(`Error fetching bikes for parking zone with ID ${zoneId}:`, error.message);
 
+        // Hantera fel baserat på typ
         if (error.message.includes('not found')) {
             return res.status(404).json({ error: error.message });
         }
