@@ -61,7 +61,6 @@ const getBikesInDefinedArea = async (id, model, type) => {
     try {
         const area = await model.findOne({ [`${type.toLowerCase()}_id`]: id });
         console.log("Area:", area);
-        
 
         if (!area) {
             throw new Error(`${type} with ID ${id} not found`);
@@ -96,7 +95,7 @@ const getBikesInCity = async (cityId) => {
  * @returns {Array} - Lista med cyklar
  */
 const getBikesInChargingStation = async (stationId) => {
-    return getBikesInDefinedArea(stationId, ChargingStation, 'Charging Station');
+    return getBikesInDefinedArea(stationId, ChargingStation, 'charging_station');
 };
 
 /**
@@ -105,7 +104,7 @@ const getBikesInChargingStation = async (stationId) => {
  * @returns {Array} - Lista med cyklar
  */
 const getBikesInParkingZone = async (zoneId) => {
-    return getBikesInDefinedArea(zoneId, ParkingZone, 'Parking Zone');
+    return getBikesInDefinedArea(zoneId, ParkingZone, 'parking_zone');
 };
 
 module.exports = {

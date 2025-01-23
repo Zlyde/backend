@@ -39,17 +39,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// POST: Fyll på saldo
-router.post('/:id/balance', async (req, res) => {
-    try {
-        const { amount } = req.body;
-        const updatedUser = await userService.addToBalance(req.params.id, amount);
-        res.status(200).json(updatedUser);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
-
 // DELETE: Ta bort en användare
 router.delete('/:id', async (req, res) => {
     try {

@@ -60,7 +60,7 @@ Fetches all bikes in the system.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5000/api/bike`  
+- **URL**: `http://localhost:5001/api/bike`  
 - **Body**: None  
 
 #### Response Example
@@ -87,7 +87,7 @@ Fetches a specific bike by its ID.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5000/api/bike/:id`  
+- **URL**: `http://localhost:5001/api/bike/:id`  
 - **Path Parameter**: `id` (The ID of the bike)  
 
 ---
@@ -98,7 +98,7 @@ Adds a new bike. If no `location` is provided, defaults to `[0, 0]`.
 
 #### Testing with Postman
 - **Method**: POST  
-- **URL**: `http://localhost:5000/api/bike`  
+- **URL**: `http://localhost:5001/api/bike`  
 - **Body (JSON)**:
 ```json
 {
@@ -116,7 +116,7 @@ Updates a specific bike by its ID.
 
 #### Testing with Postman
 - **Method**: PUT  
-- **URL**: `http://localhost:5000/api/bike/:id`  
+- **URL**: `http://localhost:5001/api/bike/:id`  
 - **Path Parameter**: `id` (The ID of the bike)  
 - **Body (JSON)**:
 ```json
@@ -134,7 +134,7 @@ Deletes a specific bike by its ID.
 
 #### Testing with Postman
 - **Method**: DELETE  
-- **URL**: `http://localhost:5000/api/bike/:id`  
+- **URL**: `http://localhost:5001/api/bike/:id`  
 - **Path Parameter**: `id` (The ID of the bike)  
 
 ---
@@ -169,7 +169,7 @@ Fetches all cities in the system.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5000/api/city`  
+- **URL**: `http://localhost:5001/api/city`  
 - **Body**: None  
 
 #### Response Example
@@ -199,7 +199,7 @@ Fetches a specific city by its ID or name.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5000/api/city/:query`  
+- **URL**: `http://localhost:5001/api/city/:query`  
 - **Path Parameter**: `query` (City ID as a number or city name as a string)  
 
 ---
@@ -215,7 +215,7 @@ This endpoint leverages the `geoService` and `geoData` modules to handle geograp
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5000/api/city/:id/bikes`  
+- **URL**: `http://localhost:5001/api/city/:id/bikes`  
 - **Path Parameter**: `id` (The ID of the city)  
 
 #### Response Example
@@ -289,7 +289,7 @@ Fetches all invoices in the system.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5000/api/invoice`  
+- **URL**: `http://localhost:5001/api/invoice`  
 - **Body**: None  
 
 ---
@@ -300,7 +300,7 @@ Fetches a specific invoice by its ID.
 
 #### Testing with Postman
 - **Method**: GET  
-- **URL**: `http://localhost:5000/api/invoice/:invoiceId`  
+- **URL**: `http://localhost:5001/api/invoice/:invoiceId`  
 - **Path Parameter**: `invoiceId` (The ID of the invoice)  
 
 ---

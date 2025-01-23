@@ -30,14 +30,7 @@ const getCityById = async (id) => {
     return city;
 };
 
-const updateCity = async (id, data) => {
-  const city = await cityData.updateCity(id, data);
-  if (!city) {
-      throw new Error('City not found');
-  }
-  return city;
-};
-
+// Hämta en specifik stad baserat på query
 const getCityByQuery = async (query) => {
   const city = await cityData.getCityByQuery(query);
   if (!city) {
@@ -45,6 +38,15 @@ const getCityByQuery = async (query) => {
   }
   return city;
 };
+
+// Uppdatera en stad
+const updateCity = async (id, data) => {
+    const city = await cityData.updateCity(id, data);
+    if (!city) {
+        throw new Error('City not found');
+    }
+    return city;
+  };
 
 // Ta bort en stad
 const deleteCity = async (id) => {
@@ -60,7 +62,7 @@ const deleteCity = async (id) => {
 module.exports = {
     getAllCities,
     getCityById,
-    deleteCity,
     getCityByQuery,
-    updateCity
+    updateCity,
+    deleteCity
 };

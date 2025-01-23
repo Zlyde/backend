@@ -5,8 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const parkingZoneService = require('../services/zoneService');
-const geoService = require('../services/geoService');
-
+const geoData = require('../data/geoData');
 
 // GET: Hämta alla parkeringszoner
 router.get('/', async (req, res) => {
@@ -28,6 +27,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// PUT: Uppdatera en parkeringszon
 router.put('/:id', async (req, res) => {
   try {
       const zone = await parkingZoneService.updateZone(req.params.id, req.body);
@@ -37,6 +37,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Lägg till en ny parkeringszon
 router.post('/', async (req, res) => {
     try {
         const newZone = await parkingZoneService.addZone(req.body);
@@ -57,13 +58,38 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// GET: Hämta cyklar i en viss parkerings-zon
+// GET: Hämta alla cyklar inom en viss parkeringszon
 router.get('/:id/bikes', async (req, res) => {
+    const zoneId = req.params.id;
+
     try {
-        const bikes = await geoService.getBikesInParkingZone(req.params.id);
-        res.status(200).json(bikes);
+        // Validera att zoneId är tillgängligt och giltigt
+        if (!zoneId || isNaN(zoneId)) {
+            return res.status(400).json({ error: 'Invalid parking zone ID' });
+        }
+
+        // Använd getBikesInParkingZone från geoData för att hämta cyklar
+        const bikes = await geoData.getBikesInParkingZone(zoneId);
+
+        // Kontrollera om några cyklar hittades
+        if (!bikes || bikes.length === 0) {
+            return res.status(404).json({ error: `No bikes found in parking zone with ID ${zoneId}` });
+        }
+
+        // Returnera cyklarna
+        res.status(200).json({ bikes });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        // Hantera olika typer av fel från geoData
+        console.error(`Error fetching bikes for parking zone with ID ${zoneId}:`, error.message);
+
+        if (error.message.includes('not found')) {
+            return res.status(404).json({ error: error.message });
+        }
+        if (error.message.includes('does not have a defined boundary or location')) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

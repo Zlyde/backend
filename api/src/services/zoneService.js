@@ -11,7 +11,6 @@
  */
 
 const parkingZoneData = require('../data/zones');
-const bikeData = require('../data/bikes');
 
 // Hämta alla parkeringszoner
 const getAllParkingZones = async () => {
@@ -20,12 +19,6 @@ const getAllParkingZones = async () => {
         throw new Error('No parking zones found in the database.');
     }
     return zones;
-};
-
-const addZone = async (data) => {
-  const newZone = await parkingZoneData.addZone(data);
-  console.log("New Trip", newZone);
-  return newZone;
 };
 
 // Hämta en specifik parkeringszon
@@ -37,6 +30,14 @@ const getParkingZoneById = async (id) => {
     return zone;
 };
 
+// Lägg till en ny parkeringszon
+const addZone = async (data) => {
+  const newZone = await parkingZoneData.addZone(data);
+  console.log("New Trip", newZone);
+  return newZone;
+};
+
+// Uppdatera en parkeringszon
 const updateZone = async (id, data) => {
   const city = await parkingZoneData.updateZone(id, data);
   if (!city) {
@@ -58,7 +59,7 @@ const deleteParkingZone = async (id) => {
 module.exports = {
     getAllParkingZones,
     getParkingZoneById,
-    deleteParkingZone,
+    addZone,
     updateZone,
-    addZone
+    deleteParkingZone
 };
