@@ -48,29 +48,3 @@ describe("API Routes", () => {
       });
     });
 });
-
-describe("API Routes", () => {
-  describe("Root endpoint (/api)", () => {
-    it("should return a welcome message and endpoints", async () => {
-      const res = await request(app).get("/api");
-
-      expect(res.status).toBe(200); // Kontrollera HTTP-status
-      expect(res.headers["content-type"]).toContain("application/json"); // Kontrollera att JSON returneras
-      expect(res.body).toHaveProperty("message", "Welcome to the Test API!");
-      expect(res.body).toHaveProperty("endpoints");
-      expect(res.body.endpoints).toEqual(
-        expect.objectContaining({
-          auth: "/auth",
-          bikes: "/bike",
-          city: "/city",
-          invoices: "/invoice",
-          stations: "/station",
-          trips: "/trip",
-          zones: "/zone",
-          users: "/user",
-          settings: "/setting",
-        })
-      );
-    });
-  });
-});
