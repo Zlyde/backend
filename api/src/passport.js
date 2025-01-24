@@ -9,7 +9,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:5001/api/auth/github/callback",
+      callbackURL: "http://localhost:5001/api/v1/auth/github/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       await auth.githubLogin(profile, done);
@@ -23,7 +23,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID1,
       clientSecret: process.env.GITHUB_CLIENT_SECRET1,
-      callbackURL: "http://localhost:5001/api/auth/githubb/callbackk",
+      callbackURL: "http://localhost:5001/api/v1/auth/githubb/callbackk",
     },
     async (accessToken, refreshToken, profile, done) => {
       await auth.githubLogin(profile, done);
