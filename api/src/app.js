@@ -35,14 +35,8 @@ app.use(
 app.use(passport.initialize());
 
 // Lägg till API-version som basväg
-app.use("/api", apiRoutes); // Bas-URL: /api
-// app.use(API_VERSION, apiRoutes); // Nu blir alla routes versionerade
-
-// Starta servern
-// const PORT = 5001;
-// app.listen(PORT, () => {
-//     console.log(`Server is running on http://localhost:${PORT}`);
-// });
+// app.use("/api", apiRoutes); // Bas-URL: /api
+app.use(API_VERSION, apiRoutes); // Nu blir alla routes versionerade
 
 // Starta servern med databas...
 const startServer = async () => {
@@ -50,9 +44,6 @@ const startServer = async () => {
     // Anslut till databasen
     await getDb(); // Hämtar databasen
     console.log("Successfully connected to the database.");
-
-    // Koppla rutter
-    // app.use('/api', apiRoutes); // Bas-URL: /api
 
     // Starta servern
     const PORT = 5001;
