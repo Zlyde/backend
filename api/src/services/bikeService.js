@@ -11,11 +11,7 @@
  */
 
 const bikeData = require("../data/bikes");
-let io;
 
-const setSocketInstance = (IoInstance) => {
-  io = IoInstance;
-};
 
 // Hämta alla cyklar
 const getAllBikes = async () => {
@@ -89,27 +85,6 @@ const updateBike = async (id, updateData) => {
         "Location coordinates must be an array with two numbers (longitude, latitude).",
       );
     }
-
-    const bike = await getBikeById(id);
-    if (!bike) return;
-    const updatedData = { ...updateData };
-    if (bike.status === "in-use") {
-      updatedData.battery_level = (bike.battery_level || 0) - 0.25;
-      if (updatedData.battery_level <= 0) {
-        updatedData.battery_level = 0;
-        updatedData.status = "maintenance";
-        updatedData.message = "cyckel dead";
-      }
-
-      updatedData.speed = bike.speed + (Math.random() - 0.5) * 1;
-      if (updatedData.speed < 0) updatedData.speed = 0;
-      if (updatedData.speed > 20) updatedData.speed = 20;
-    }
-
-    console.log(`Bike with ID ${id} successfully updated.`);
-    if (io) {
-      io.emit("bike-update", updatedData);
-    }
     return await bikeData.updateBike(id, updatedData);
   } catch (error) {
     console.error(`Error updating bike with ID ${id}:`, error.message);
@@ -134,5 +109,4 @@ module.exports = {
   addBike,
   updateBike,
   deleteBike,
-  setSocketInstance,
 };

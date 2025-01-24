@@ -21,7 +21,7 @@ const initSocket = (server) => {
       const { bike, trip_id } = trip;
       // io.emit('position-updated', data)
       io.to(`${trip_id}`).emit("position-updated", trip);
-      // console.log(bike)
+      console.log(bike)
 
       io.emit("admin-trip-update", trip);
     });
