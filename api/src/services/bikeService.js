@@ -38,10 +38,6 @@ const getBikeById = async (id) => {
 // Lägg till en ny cykel
 const addBike = async (bike) => {
   try {
-    // Sätt standardvärden för ny cykel
-    bike.status = "available";
-    bike.battery_level = 100;
-
     // Validera koordinater om de anges
     if (
       bike.location &&
