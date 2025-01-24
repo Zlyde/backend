@@ -1,15 +1,42 @@
 # API Documentation
 
+## Introduction
 
-## Api overview
+Welcome to the API documentation for the Elspark API. This API provides a robust set of endpoints for managing resources such as bikes, cities, charging stations, trips, users, invoices, and settings. The API is designed to support a wide range of operations, including data retrieval, creation, updates, and deletions, with secure authentication and role-based access control.
+
+### Key Features:
+- **Authentication**: Secure user authentication using email/password or OAuth (GitHub).
+- **Bike Management**: Comprehensive endpoints for bike inventory, location tracking, and status updates.
+- **City, Station and Zone Operations**: Support for managing cities, charging stations and parking zones, including geospatial data integration.
+- **Invoice Handling**: Seamless handling of user invoices, including payment processing.
+- **Trip Management**: Endpoints to track, start, and end user trips with cost calculations.
+- **Settings**: Fully configurable system settings for dynamic application behavior.
+
+### Getting Started
+- **Base URL**:  
+  All endpoints are prefixed with `/api/{version}`, where `{version}` represents the current API version. The current version is `v1`.
+
+- **Example Base URL**:  
+  Use the following base URL as a starting point for requests:
+  ```
+  http://localhost:5001/api/v1/
+  ```
+- **Testing Tools**: Endpoints can be tested using tools like Postman or curl. Example requests and responses are provided throughout the documentation.
+
+### Error Codes and Responses
+For an overview of possible error codes and response messages, see the [Error and Response Codes](#error-and-response-codes) section at the end of this documentation.
+
+
+### API Overview
+The table below provides a high-level summary of available endpoints. Click on each endpoint to navigate directly to its detailed documentation and guide on usage and testing.
 
 | URI (endpoints)          | GET                                                   | POST                      | PUT                 | DELETE                   |
 |--------------------------|------------------------------------------------------|---------------------------|---------------------|--------------------------|
 | `/`                      | [API Overview](#api-overview)                          |                           |                     |                          |
 | `/auth`                  | [Authentication Overview](#authentication-overview)            |                           |                     |                          |
-| `/auth/register`         |                            | Register new user         |                     |                          |
-| `/auth/login`            |                            | Login with email and password |                |                          |
-| `/auth/github`           |                            | [GitHub Login](#github-login)      |                     |                          |
+| `/auth/register`         |                            | [Register a new user](#register-a-new-user)   |                     |                          |
+| `/auth/login`            |                            | [Login with email and password ](#login-with-email-and-password) |                |                          |
+| `/auth/github`           |                            | [Login with github](#login-with-github)      |                     |                          |
 | `/bike`                  | [Get all bikes](#get-all-bikes)    | [Add a new bike](#add-a-new-bike)    |                     |                          |
 | `/bike/:id`              | [Get bike by ID](#get-bike-by-id)     |                           | [Update a bike](#update-a-bike)       | [Delete a bike](#delete-a-bike)    |
 | `/city`                  | [Get all cities](#get-all-cities)     |                           |                     |                          |
@@ -38,71 +65,48 @@
 | `/zone/{zone_id}`      | [Get parking zone by ID](#get-parking-zone-by-id) |  | [Update a parking zone](#update-a-parking-zone) | [Delete a parking zone](#delete-a-parking-zone) |
 | `/zone/{zone_id}/bikes`| [Get bikes in a parking zone](#get-bikes-in-a-parking-zone)  |             |          |            |
 
+## Api main route
 
-## Table of Contents
-- [Auth](#auth)
-  - [Authentication Overview](#authentication-overview)
-  - [Get API Instructions](#get-api-instructions)
-  - [Register a new user](#register-a-new-user)
-  - [Login with email and password ](#login-with-email-and-password)
-  - [GitHub Login](#github-login)
-  - [Auth Error and Response Codes](#auth-error-and-response-codes)
-- [Bikes](#bikes)
-  - [Get all bikes](#get-all-bikes)
-  - [Get bike by ID](#get-bike-by-id)
-  - [Add a new bike](#add-a-new-bike)
-  - [Update a bike](#update-a-bike)
-  - [Delete a bike](#delete-a-bike)
-  - [Bike Error and Response Codes](#bike-error-and-response-codes)
-- [Cities](#cities)
-  - [Get all cities](#get-all-cities)
-  - [Get city by ID or name](#get-city-by-id-or-name)
-  - [Update a city](#update-a-city)
-  - [Get bikes in a city](#get-bikes-in-a-city)
-  - [City Error and Response Codes](#city-error-and-response-codes)
-- [Invoices](#invoices)
-  - [Get all invoices](#get-all-invoices)
-  - [Get invoice by ID](#get-invoice-by-id)
-  - [Get invoices by user ID](#get-invoices-by-user-id)
-  - [Create a new invoice](#create-a-new-invoice)
-  - [Mark an invoice as paid](#mark-an-invoice-as-paid)
-  - [Invoice Error and Response Codes](#invoice-error-and-response-codes)
-- [Settings](#settings)
-  - [Get settings](#get-settings)
-  - [Update settings](#update-settings)
-  - [Reset settings to defaults](#reset-settings-to-defaults)
-  - [Setting-Error and Response Codes](#setting-error-and-response-codes)
-- [Charging Stations](#charging-stations)
-  - [Get all charging stations](#get-all-charging-stations)
-  - [Get charging station by ID](#get-charging-station-by-id)
-  - [Add a new charging station](#add-a-new-charging-station)
-  - [Update a charging station](#update-a-charging-station)
-  - [Delete a charging station](#delete-a-charging-station)
-  - [Get bikes at a charging station](#get-bikes-at-a-charging-station)
-  - [Station Error and Response Codes](#station-error-and-response-codes)
-- [Trips](#trips)
-  - [Get all trips](#get-all-trips)
-  - [Get trip by ID](#get-trip-by-id)
-  - [Get trips by user ID](#get-trips-by-user-id)
-  - [Get trips by bike ID](#get-trips-by-bike-id)
-  - [Start a new trip](#start-a-new-trip)
-  - [End a trip](#end-a-trip)
-  - [Trip Error and Response Codes](#trip-error-and-response-codes)
-- [Users](#trips)
-  - [Get all users](#get-all-users)
-  - [Get user by ID](#get-user-by-id)
-  - [Update a user](#updatea-a-user)
-  - [Delete a user](#delete-a-user)
-  - [User Error and Response Codes](#user-error-and-response-codes)
-- [Parking Zones](#parking-zones)
-  - [Get all parking zones](#get-all-parking-zones)
-  - [Get parking zone by ID](#get-parking-zone-by-id)
-  - [Add a new parking zone](#add-a-new-parking-zone)
-  - [Update a parking zone](#update-a-parking-zone)
-  - [Delete a parking zone](#delete-a-parking-zone)
-  - [Get bikes in a parking zone](#get-bikes-in-a-parking-zone)
-  - [Zone Error and Response Codes](#zone-error-and-response-codes)
+### API Overview
+
+The table below summarizes all available endpoints categorized by resource and operation type. Each endpoint includes its respective HTTP methods (GET, POST, PUT, DELETE), and you can navigate to detailed documentation for each by clicking the links.
+
 ---
+
+### Main Route
+
+**Endpoint**: `GET /api/{version}/`  
+The main route provides an overview of the API and basic usage instructions. It serves as an entry point to understand the available resources and how to interact with the API. This route is useful for quickly verifying that the server is up and running.
+
+#### Testing with Postman
+
+- **Method**: `GET`  
+- **URL**: `http://localhost:5001/api/{version}/`  
+- **Body**: None  
+
+#### Response Example
+
+The response includes a welcome message and a list of top-level resources available in the API. Each key in the `endpoints` object represents a specific resource category, with the corresponding URI for its operations.
+
+```json
+{
+  "message": "Välkommen till elspark API!",
+  "endpoints": {
+    "auth": "/auth",
+    "bikes": "/bike",
+    "city": "/city",
+    "invoices": "/invoice",
+    "stations": "/station",
+    "trips": "/trip",
+    "zones": "/zone",
+    "users": "/user",
+    "settings": "/setting"
+  }
+}
+```
+
+[Back to API Overview](#api-overview)
+
 
 ## Auth Endpoints
 
@@ -171,7 +175,7 @@ Registers a new user in the system.
 
 ---
 
-### Login a user
+### Login with email and password 
 
 **Endpoint**: `POST /api/{version}/auth/login`  
 Logs in a user and provides a JWT token for authentication.
@@ -209,7 +213,7 @@ Logs in a user and provides a JWT token for authentication.
 
 ---
 
-### GitHub Login
+### Login with GitHub
 
 **Endpoint**: `GET /api/{version}/auth/github`  
 Redirects the user to GitHub for OAuth login.
@@ -242,21 +246,7 @@ On successful callback:
 }
 ```
 
----
-
-### Auth Error and Response Codes
-
-| HTTP Status | Layer   | Message/Description                           | Notes                                                       |
-|-------------|---------|-----------------------------------------------|-------------------------------------------------------------|
-| 200         | HTTP    | `Success`                                    | Returned when a request completes successfully.             |
-| 201         | HTTP    | `Created`                                    | Returned when a new user is registered.                     |
-| 400         | Service | `Missing Field`                              | Triggered when required fields are missing.                 |
-| 400         | HTTP    | `Invalid token`                              | Triggered when a provided token is invalid or expired.      |
-| 401         | HTTP    | `User not found`                             | Triggered when no user matches the provided credentials.    |
-| 401         | HTTP    | `Wrong password`                             | Triggered when the password is incorrect.                   |
-| 403         | Service | `No token provided`                          | Triggered when no token is sent in the request headers.     |
-| 500         | Data    | `Internal server error`                      | Generic server error during registration or login.          |
-| 500         | Data    | `Error logging in`                           | Generic server error for login failures.                    |
+[Back to API Overview](#api-overview)
 
 ## Bike Endpoints
 
@@ -353,20 +343,8 @@ Deletes a specific bike by its ID.
 - **URL**: `http://localhost:5001/api/{version}/bike/:id`  
 - **Path Parameter**: `id` (The ID of the bike)  
 
----
+[Back to API Overview](#api-overview)
 
-### Bike Error and Response Codes
-
-| HTTP Status | Layer        | Message/Description                                                       | Notes                                                 |
-|-------------|--------------|---------------------------------------------------------------------------|-------------------------------------------------------|
-| 200         | HTTP         | `Success`                                                                 | Returned when a GET, PUT, or DELETE request succeeds. |
-| 201         | HTTP         | `Created`                                                                 | Returned when a new bike is successfully added.       |
-| 400         | Service      | `Validation error: battery_level must be between 0-100`                   | Triggered when `battery_level` exceeds limits.        |
-| 400         | Service      | `Validation error: location.coordinates must be an array with two numbers`| Triggered if `location` is invalid.                   |
-| 404         | HTTP         | `Bike with ID {id} not found.`                                            | Triggered when bike is not found.                     |
-| 500         | Data         | `Error fetching bikes: {error}`                                           | Generic server error for fetching data.               |
-
----
 
 ## City Endpoints
 
@@ -517,24 +495,7 @@ This endpoint leverages the `geoService` module, which internally uses the `geoD
 - Error messages such as `City with ID {id} not found` or `City does not have a defined boundary or location` are handled and returned based on the error type.
 - The `geoData.getBikesWithinArea` method is responsible for querying MongoDB for bikes within the defined GeoJSON boundary.
 
----
-
-### City Error and Response Codes
-
-| HTTP Status | Layer        | Message/Description                                         | Notes                                                  |
-|-------------|--------------|------------------------------------------------------------|--------------------------------------------------------|
-| 200         | HTTP         | `Success`                                                 | Returned when a GET request succeeds.                 |
-| 400         | Service      | `Validation error: City boundary is not defined`          | Triggered when a city lacks a defined boundary.        |
-| 400         | HTTP         | `Invalid city ID`                                         | Triggered when the provided city ID is missing or invalid. |
-| 404         | HTTP         | `City with ID {id} not found.`                             | Triggered when a city with the specified ID does not exist. |
-| 404         | HTTP         | `City not found.`                                          | Triggered when no city matches the given query.        |
-| 404         | HTTP         | `No bikes found in city with ID {id}`                     | Triggered when no bikes are located within the city boundary. |
-| 404         | Service      | `{type} with ID {id} not found`                           | Triggered when a specified type (City, Charging Station, Parking Zone) does not exist. |
-| 500         | Data         | `Error fetching bikes in {type.toLowerCase()} with ID {id}: {error}` | Generic error when fetching bikes for a specific type fails. |
-| 500         | Data         | `Error fetching cities: {error}`                          | Generic server error for fetching data.                |
-| 500         | Data         | `Error fetching bikes within area: {error}`               | Generic server error for geographical data fetching.   |
-| 500         | HTTP         | `Internal server error`                                   | Generic error when an unexpected issue occurs.         |
-| 500         | HTTP         | `"Error updating city: {error}"`                          | Generic server error for issues during the update process. |
+[Back to API Overview](#api-overview)
 
 ## Invoice Endpoints
 
@@ -612,24 +573,7 @@ Marks a specific invoice as paid and updates the payment method.
     "paymentMethod": "prepaid"
 }
 ```
-
----
-
-### Invoice Error and Response Codes
-
-| HTTP Status | Layer        | Message/Description                                         | Notes                                                  |
-|-------------|--------------|------------------------------------------------------------|--------------------------------------------------------|
-| 200         | HTTP         | `Success`                                                 | Returned when a GET, PUT request succeeds.             |
-| 201         | HTTP         | `Created`                                                 | Returned when a new invoice is successfully created.   |
-| 400         | Service      | `Validation error: Missing required fields`               | Triggered when `tripId` or `userId` is missing.        |
-| 400         | Service      | `Validation error: Invalid payment method`                | Triggered when an unsupported payment method is provided. |
-| 400         | Service      | `Validation error: Insufficient funds`                    | Triggered when the user does not have enough balance for a `prepaid` payment. |
-| 404         | HTTP         | `Invoice with ID {id} not found.`                         | Triggered when the specified invoice ID does not exist. |
-| 404         | HTTP         | `No invoices found for user with ID {id}`                 | Triggered when no invoices are associated with the given user. |
-| 404         | HTTP         | `User with ID {userId} not found.`                        | Triggered when the user associated with the invoice does not exist. |
-| 500         | Data         | `Error fetching invoices: {error}`                        | Generic server error for fetching invoices.            |
-| 500         | Data         | `Error creating invoice: {error}`                         | Generic server error for creating an invoice.          |
-| 500         | Data         | `Error updating invoice: {error}`                         | Generic server error for updating an invoice.          |
+[Back to API Overview](#api-overview)
 
 #### Notes
 - The `invoiceService` validates and calculates pricing based on trip details and system settings.
@@ -737,18 +681,7 @@ Resets the application settings to default values.
 }
 ```
 
----
-
-### Setting Error and Response Codes
-
-| HTTP Status | Layer        | Message/Description                           | Notes                                                  |
-|-------------|--------------|-----------------------------------------------|--------------------------------------------------------|
-| 200         | HTTP         | `Success`                                    | Returned when a GET or PUT request succeeds.           |
-| 400         | Service      | `Validation error: Base price cannot be negative` | Triggered when the `base_price` is invalid.            |
-| 400         | Service      | `Validation error: Fee amount must be between 0 and 100` | Triggered when `fee_amount` exceeds limits.            |
-| 500         | Data         | `Error fetching settings: {error}`            | Generic server error for fetching settings.            |
-| 500         | Data         | `Error updating settings: {error}`            | Generic server error for updating settings.            |
-| 500         | Data         | `Error resetting settings: {error}`           | Generic server error for resetting settings.           |
+[Back to API Overview](#api-overview)
 
 ## Station Endpoints
 
@@ -938,22 +871,7 @@ This endpoint uses the **`geoService`** module, which relies on the **`geoData`*
 - Error handling includes checks for invalid IDs, missing charging stations, or stations without bikes.
 - The `geoData.getBikesWithinArea` method performs MongoDB queries to fetch bikes within the defined GeoJSON geometry.
 
----
-
-### Station Error and Response Codes
-
-| HTTP Status | Layer        | Message/Description                                      | Notes                                                   |
-|-------------|--------------|---------------------------------------------------------|---------------------------------------------------------|
-| 200         | HTTP         | `Success`                                               | Returned when a GET or DELETE request succeeds.         |
-| 400         | Service      | `Validation error: Invalid charging station ID`         | Triggered when the `charging_station_id` is invalid.    |
-| 404         | HTTP         | `Charging station with ID {id} not found.`              | Triggered when no station matches the given ID.         |
-| 404         | HTTP         | `No bikes found at charging station with ID {id}.`     | Triggered when no bikes are located at the station.     |
-| 500         | Data         | `Error fetching charging stations: {error}`            | Generic server error for charging station data.         |
-| 500         | Data         | `Error fetching bikes at charging station: {error}`    | Generic server error for retrieving bikes at a station. |
-| 400         | Service      | `Validation error: Invalid capacity value.`       | Triggered when a field contains invalid data.          |
-| 404         | HTTP         | `Charging station with ID {id} not found.`        | Triggered when no charging station matches the given ID. |
-| 500         | Data         | `Error updating charging station: {error}`        | Generic server error for updating a station.           |
-
+[Back to API Overview](#api-overview)
 
 ## Trip Endpoints
 
@@ -1037,22 +955,7 @@ Ends a trip and calculates its duration and cost.
 - **URL**: `http://localhost:5001/api/{version}/trip/end/:tripId`  
 - **Path Parameter**: `tripId` (The ID of the trip)  
 
----
-
-### Trip Error and Response Codes
-
-| HTTP Status | Layer        | Message/Description                                         | Notes                                                   |
-|-------------|--------------|------------------------------------------------------------|---------------------------------------------------------|
-| 200         | HTTP         | `Success`                                                 | Returned when a GET, PUT, or DELETE request succeeds.   |
-| 201         | HTTP         | `Created`                                                 | Returned when a new trip is successfully started.       |
-| 400         | Service      | `Bike is not available for rental`                        | Triggered if the bike is already in use or unavailable. |
-| 400         | Service      | `Bike battery level must be at least 50%`                | Triggered if the bike's battery level is insufficient.  |
-| 404         | HTTP         | `Trip with ID {tripId} not found.`                        | Triggered when no trip matches the given ID.            |
-| 404         | HTTP         | `No trips found for user with ID {userId}`               | Triggered when no trips are associated with the user.   |
-| 404         | HTTP         | `No trips found for bike with ID {bikeId}`               | Triggered when no trips are associated with the bike.   |
-| 500         | Data         | `Error fetching trips: {error}`                          | Generic server error for fetching trip data.            |
-| 500         | Data         | `Error updating trip with ID {tripId}: {error}`          | Generic server error for updating trip data.            |
-
+[Back to API Overview](#api-overview)
 
 ## User Endpoints
 
@@ -1183,22 +1086,7 @@ Deletes a specific user by their ID.
 }
 ```
 
----
-
-### User Error and Response Codes
-
-| HTTP Status | Layer        | Message/Description                                         | Notes                                                  |
-|-------------|--------------|------------------------------------------------------------|--------------------------------------------------------|
-| 200         | HTTP         | `Success`                                                 | Returned when a GET, PUT, or DELETE request succeeds.   |
-| 400         | Service      | `Validation error: Invalid role`                          | Triggered when an invalid `role` value is provided.     |
-| 400         | Service      | `Validation error: Account balance cannot be negative`    | Triggered when `account_balance` is less than `0`.      |
-| 404         | HTTP         | `User with ID {id} not found.`                            | Triggered when no user matches the given ID.            |
-| 404         | HTTP         | `No users found in the database.`                         | Triggered when there are no users in the database.      |
-| 500         | Data         | `Error fetching users: {error}`                           | Generic server error for fetching user data.            |
-| 500         | Data         | `Error updating user: {error}`                            | Generic server error for updating user data.            |
-| 500         | Data         | `Error deleting user: {error}`                            | Generic server error for deleting user data.            |
-
----
+[Back to API Overview](#api-overview)
 
 ## Zone Endpoints
 
@@ -1424,12 +1312,93 @@ Fetches all bikes located in a specific parking zone.
 }
 ```
 
----
+[Back to API Overview](#api-overview)
 
-### Zone Error and Response Codes
+## Error and Response Codes
 
-| HTTP Status | Layer   | Message/Description                                  | Notes                                                |
-|-------------|---------|-----------------------------------------------------|------------------------------------------------------|
+The table below summarizes the error and response codes used across the API. Each entry includes the HTTP status, the layer where the error originates, a description, and any additional notes.
+
+| HTTP Status | Layer   | Message/Description                           | Notes                                                       |
+|-------------|---------|-----------------------------------------------|-------------------------------------------------------------|
+**Auth Response Codes:**                                                                                                                  
+| 200         | HTTP    | `Success`                                    | Returned when a request completes successfully.             |
+| 201         | HTTP    | `Created`                                    | Returned when a new user is registered.                     |
+| 400         | Service | `Missing Field`                              | Triggered when required fields are missing.                 |
+| 400         | HTTP    | `Invalid token`                              | Triggered when a provided token is invalid or expired.      |
+| 401         | HTTP    | `User not found`                             | Triggered when no user matches the provided credentials.    |
+| 401         | HTTP    | `Wrong password`                             | Triggered when the password is incorrect.                   |
+| 403         | Service | `No token provided`                          | Triggered when no token is sent in the request headers.     |
+| 500         | Data    | `Internal server error`                      | Generic server error during registration or login.          |
+| 500         | Data    | `Error logging in`                           | Generic server error for login failures.                    |
+**Bike Response Codes:**
+| 200         | HTTP         | `Success`                                                                 | Returned when a GET, PUT, or DELETE request succeeds. |
+| 201         | HTTP         | `Created`                                                                 | Returned when a new bike is successfully added.       |
+| 400         | Service      | `Validation error: battery_level must be between 0-100`                   | Triggered when `battery_level` exceeds limits.        |
+| 400         | Service      | `Validation error: location.coordinates must be an array with two numbers`| Triggered if `location` is invalid.                   |
+| 404         | HTTP         | `Bike with ID {id} not found.`                                            | Triggered when bike is not found.                     |
+| 500         | Data         | `Error fetching bikes: {error}`                                           | Generic server error for fetching data.               |
+**City Response Codes:**    
+| 200         | HTTP         | `Success`                                                 | Returned when a GET request succeeds.                 |
+| 400         | Service      | `Validation error: City boundary is not defined`          | Triggered when a city lacks a defined boundary.        |
+| 400         | HTTP         | `Invalid city ID`                                         | Triggered when the provided city ID is missing or invalid. |
+| 404         | HTTP         | `City with ID {id} not found.`                             | Triggered when a city with the specified ID does not exist. |
+| 404         | HTTP         | `City not found.`                                          | Triggered when no city matches the given query.        |
+| 404         | HTTP         | `No bikes found in city with ID {id}`                     | Triggered when no bikes are located within the city boundary. |
+| 404         | Service      | `{type} with ID {id} not found`                           | Triggered when a specified type (City, Charging Station, Parking Zone) does not exist. |
+| 500         | Data         | `Error fetching bikes in {type.toLowerCase()} with ID {id}: {error}` | Generic error when fetching bikes for a specific type fails. |
+| 500         | Data         | `Error fetching cities: {error}`                          | Generic server error for fetching data.                |
+| 500         | Data         | `Error fetching bikes within area: {error}`               | Generic server error for geographical data fetching.   |
+| 500         | HTTP         | `Internal server error`                                   | Generic error when an unexpected issue occurs.         |
+| 500         | HTTP         | `"Error updating city: {error}"`                          | Generic server error for issues during the update process. |
+**Invoice Response Codes:**
+| 200         | HTTP         | `Success`                                                 | Returned when a GET, PUT request succeeds.             |
+| 201         | HTTP         | `Created`                                                 | Returned when a new invoice is successfully created.   |
+| 400         | Service      | `Validation error: Missing required fields`               | Triggered when `tripId` or `userId` is missing.        |
+| 400         | Service      | `Validation error: Invalid payment method`                | Triggered when an unsupported payment method is provided. |
+| 400         | Service      | `Validation error: Insufficient funds`                    | Triggered when the user does not have enough balance for a `prepaid` payment. |
+| 404         | HTTP         | `Invoice with ID {id} not found.`                         | Triggered when the specified invoice ID does not exist. |
+| 404         | HTTP         | `No invoices found for user with ID {id}`                 | Triggered when no invoices are associated with the given user. |
+| 404         | HTTP         | `User with ID {userId} not found.`                        | Triggered when the user associated with the invoice does not exist. |
+| 500         | Data         | `Error fetching invoices: {error}`                        | Generic server error for fetching invoices.            |
+| 500         | Data         | `Error creating invoice: {error}`                         | Generic server error for creating an invoice.          |
+| 500         | Data         | `Error updating invoice: {error}`                         | Generic server error for updating an invoice.          |
+**Setting Response Codes:**
+| 200         | HTTP         | `Success`                                    | Returned when a GET or PUT request succeeds.           |
+| 400         | Service      | `Validation error: Base price cannot be negative` | Triggered when the `base_price` is invalid.            |
+| 400         | Service      | `Validation error: Fee amount must be between 0 and 100` | Triggered when `fee_amount` exceeds limits.            |
+| 500         | Data         | `Error fetching settings: {error}`            | Generic server error for fetching settings.            |
+| 500         | Data         | `Error updating settings: {error}`            | Generic server error for updating settings.            |
+| 500         | Data         | `Error resetting settings: {error}`           | Generic server error for resetting settings.           |
+**Charging Station Response Codes:**
+| 200         | HTTP         | `Success`                                               | Returned when a GET or DELETE request succeeds.         |
+| 400         | Service      | `Validation error: Invalid charging station ID`         | Triggered when the `charging_station_id` is invalid.    |
+| 404         | HTTP         | `Charging station with ID {id} not found.`              | Triggered when no station matches the given ID.         |
+| 404         | HTTP         | `No bikes found at charging station with ID {id}.`     | Triggered when no bikes are located at the station.     |
+| 500         | Data         | `Error fetching charging stations: {error}`            | Generic server error for charging station data.         |
+| 500         | Data         | `Error fetching bikes at charging station: {error}`    | Generic server error for retrieving bikes at a station. |
+| 400         | Service      | `Validation error: Invalid capacity value.`       | Triggered when a field contains invalid data.          |
+| 404         | HTTP         | `Charging station with ID {id} not found.`        | Triggered when no charging station matches the given ID. |
+| 500         | Data         | `Error updating charging station: {error}`        | Generic server error for updating a station.           |
+**Trip Response Codes:**
+| 200         | HTTP         | `Success`                                                 | Returned when a GET, PUT, or DELETE request succeeds.   |
+| 201         | HTTP         | `Created`                                                 | Returned when a new trip is successfully started.       |
+| 400         | Service      | `Bike is not available for rental`                        | Triggered if the bike is already in use or unavailable. |
+| 400         | Service      | `Bike battery level must be at least 50%`                | Triggered if the bike's battery level is insufficient.  |
+| 404         | HTTP         | `Trip with ID {tripId} not found.`                        | Triggered when no trip matches the given ID.            |
+| 404         | HTTP         | `No trips found for user with ID {userId}`               | Triggered when no trips are associated with the user.   |
+| 404         | HTTP         | `No trips found for bike with ID {bikeId}`               | Triggered when no trips are associated with the bike.   |
+| 500         | Data         | `Error fetching trips: {error}`                          | Generic server error for fetching trip data.            |
+| 500         | Data         | `Error updating trip with ID {tripId}: {error}`          | Generic server error for updating trip data.            |
+**User Response Codes:**
+| 200         | HTTP         | `Success`                                                 | Returned when a GET, PUT, or DELETE request succeeds.   |
+| 400         | Service      | `Validation error: Invalid role`                          | Triggered when an invalid `role` value is provided.     |
+| 400         | Service      | `Validation error: Account balance cannot be negative`    | Triggered when `account_balance` is less than `0`.      |
+| 404         | HTTP         | `User with ID {id} not found.`                            | Triggered when no user matches the given ID.            |
+| 404         | HTTP         | `No users found in the database.`                         | Triggered when there are no users in the database.      |
+| 500         | Data         | `Error fetching users: {error}`                           | Generic server error for fetching user data.            |
+| 500         | Data         | `Error updating user: {error}`                            | Generic server error for updating user data.            |
+| 500         | Data         | `Error deleting user: {error}`                            | Generic server error for deleting user data.            |
+**Parking Zone Response Codes:**
 | 200         | HTTP    | `Success`                                           | Returned when a GET, POST, PUT, or DELETE succeeds.  |
 | 201         | HTTP    | `Created`                                           | Returned when a new parking zone is successfully created. |
 | 400         | Service | `Validation error: Invalid boundary format`         | Triggered when the provided boundary is not valid.   |
@@ -1438,3 +1407,5 @@ Fetches all bikes located in a specific parking zone.
 | 500         | Data    | `Error fetching parking zones: {error}`             | Generic server error for fetching parking zones.     |
 | 500         | Data    | `Error updating parking zone: {error}`              | Generic server error for updating a parking zone.    |
 | 500         | Data    | `Error deleting parking zone: {error}`              | Generic server error for deleting a parking zone.    |
+
+[Back to API Overview](#api-overview)

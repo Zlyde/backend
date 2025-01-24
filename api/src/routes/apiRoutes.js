@@ -37,7 +37,7 @@ router.use("/setting", settingRoutes);
 // Rot-route
 router.get("/", (req, res) => {
   const response = {
-    message: "Welcome to the Test API!",
+    message: "Välkommen till elspark API!",
     endpoints: {
       auth: "/auth",
       bikes: "/bike",

@@ -1,5 +1,14 @@
 /**
  * src/routes/stationRoutes.js
+ * Lager: "Routing Layer"
+ * 
+ * Rutter:
+ * - GET /: Hämta alla laddstationer
+ * - GET /:id: Hämta en specifik laddstation
+ * - POST /: Lägg till en ny laddstation
+ * - PUT /:id: Uppdatera en laddstation 
+ * - DELETE /:id: Ta bort en laddstation
+ * - GET /:id/bikes: Hämta alla cyklar inom en viss laddstation
  */
 
 const express = require("express");
