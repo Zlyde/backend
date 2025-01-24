@@ -1,5 +1,14 @@
 /**
  * src/data/zones.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Hämta alla parkeringszoner
+ * - Hämta en specifik parkeringszon baserat på ID
+ * - Lägg till en ny parkeringszon
+ * - Uppdatera en parkeringszon
+ * - Ta bort en parkeringszon
+ * - Hämta cyklar på specifik parkeringszon
  */
 
 const ParkingZone = require("../models/zoneModel");

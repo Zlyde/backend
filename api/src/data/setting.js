@@ -1,5 +1,11 @@
 /**
  * src/data/setting.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Hämta inställningar (det enda dokumentet)
+ * - Uppdatera inställningar
+ * - Återställ inställningar till standardvärden
  */
 
 const Setting = require("../models/settingModel");

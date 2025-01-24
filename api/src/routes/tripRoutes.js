@@ -1,5 +1,14 @@
 /**
  * src/routes/tripRoutes.js
+ * Lager: "Routing Layer"
+ * 
+ * Rutter:
+ * - GET /: Hämta alla resor
+ * - GET /:tripId: Hämta en specifik resa
+ * - GET /user/:userId: Hämta resehistorik för en specifik användare
+ * - GET /bike/:bikeId: Hämta resor för en specifik cykel
+ * - POST /start: Påbörja ny resa
+ * - PUT /end/:trip: Avsluta en specifik resa
  */
 
 const express = require("express");

@@ -1,5 +1,15 @@
 /**
  * src/data/bikes.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Hämta alla cyklar
+ * - Hämta en specifik cykel baserat på bike_id
+ * - Lägg till en ny cykel
+ * - Uppdatera en cykel
+ * - Ta bort en cykel
+ * - Hämta alla cyklar inom en viss laddstation
+ * - Hämta alla cyklar inom en viss parkeringszon
  */
 
 const Bike = require("../models/bikeModel");

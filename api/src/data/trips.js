@@ -1,5 +1,14 @@
 /**
  * src/data/trips.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Hämta alla resor
+ * - Hämta en specifik resa baserat på trip_id
+ * - Hämta resor baserat på user_id
+ * - Hämta resor baserat på bike_id
+ * - Skapa en ny resa
+ * - Uppdatera en resa
  */
 
 const Trip = require("../models/tripModel");

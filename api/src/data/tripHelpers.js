@@ -1,5 +1,12 @@
 /**
  * src/data/tripHelpers.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Validera om en cykel kan hyras
+ * - Skapa startinformation för en resa
+ * - Beräkna varaktighet av en resa
+ * - Uppdatera cykelstatus
  */
 
 const Bike = require("../models/bikeModel");

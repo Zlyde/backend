@@ -1,5 +1,13 @@
 /**
  * src/routes/bikeRoutes.js
+ * Lager: "Routing Layer"
+ * 
+ * Rutter:
+ * - GET /: Hämta alla cyklar
+ * - GET /:id: Hämta en specifik cykel
+ * - POST /: Lägg till en ny cykel
+ * - PUT /:id: Uppdatera en cykel
+ * - DELETE /:id: Ta bort en cykel
  */
 
 const express = require("express");

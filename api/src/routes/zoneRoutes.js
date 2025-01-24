@@ -1,5 +1,14 @@
 /**
  * src/routes/zoneRoutes.js
+ * Lager: "Routing Layer"
+ * 
+ * Rutter:
+ * - GET /: Hämta alla parkeringszoner
+ * - GET /:id: Hämta en specifik parkeringszon
+ * - POST /: Lägg till en ny parkeringszon
+ * - PUT /:id: Uppdatera en parkeringszon
+ * - DELETE /:id: Ta bort en parkeringszon
+ * - GET /:id/bikes: Hämta alla cyklar inom en viss parkeringszon
  */
 
 const express = require("express");

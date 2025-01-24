@@ -1,5 +1,14 @@
 /**
  * src/data/cities.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Hämta alla städer
+ * - Hämta en specifik stad baserat på ID
+ * - Hämta en specifik stad baserat på sökord
+ * - Hämta en specifik stad baserat på namn
+ * - Uppdatera en stad
+ * - Ta bort en stad
  */
 
 const City = require("../models/cityModel");

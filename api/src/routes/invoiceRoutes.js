@@ -1,5 +1,13 @@
 /**
  * src/routes/invoiceRoutes.js
+ * Lager: "Routing Layer"
+ * 
+ * Rutter:
+ * - GET /: Hämta alla fakturor
+ * - GET /:invoiceId: Hämta en specifik faktura
+ * - GET /user/:userId: Hämta alla fakturor för en specifik användare
+ * - POST /create: Skapa en ny faktura
+ * - PUT /pay/:invoiceId: Markera en faktura som betald
  */
 
 const express = require("express");

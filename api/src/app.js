@@ -22,6 +22,9 @@ const app = express();
 const server = http.createServer(app);
 const io = initSocket(server);
 
+// Global server instance
+let serverInstance;
+
 // Middleware
 app.use(express.json()); // För att hantera JSON i förfrågningar
 app.use(
@@ -33,8 +36,7 @@ app.use(
 app.use(passport.initialize());
 
 // Lägg till API-version som basväg
-// app.use("/api", apiRoutes); // Bas-URL: /api
-app.use(API_VERSION, apiRoutes); // Nu blir alla routes versionerade
+app.use(API_VERSION, apiRoutes);
 
 // Starta servern med databas...
 const startServer = async () => {
@@ -45,7 +47,7 @@ const startServer = async () => {
 
     // Starta servern
     const PORT = 5001;
-    server.listen(PORT, "0.0.0.0", () => {
+    serverInstance = server.listen(PORT, "0.0.0.0", () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
   } catch (error) {
@@ -54,7 +56,20 @@ const startServer = async () => {
   }
 };
 
+// Funktion för att stänga servern
+const stopServer = async () => {
+  if (serverInstance) {
+    await new Promise((resolve, reject) => {
+      serverInstance.close((err) => {
+        if (err) return reject(err);
+        console.log("Server has been stopped.");
+        resolve();
+      });
+    });
+  }
+};
+
 // Anropa funktionen för att starta servern
 startServer();
 
-module.exports = { app, io };
+module.exports = { app, io, startServer, stopServer };

@@ -1,5 +1,13 @@
 /**
  * src/routes/cityRoutes.js
+ * Lager: "Routing Layer"
+ * 
+ * Rutter:
+ * - GET /: Hämta alla städer
+ * - GET /:query: Hämta en specifik stad
+ * - PUT /:id: Uppdatera en stad
+ * - GET /:id/bikes: Hämta alla cyklar inom en viss stad
+ * - GET /:id/bikes/:bikeId: Hämta en specifik cykel inom en viss stad
  */
 
 const express = require("express");

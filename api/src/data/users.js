@@ -1,5 +1,14 @@
 /**
  * src/data/users.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Hämta alla användare
+ * - Hämta en specifik användare baserat på userID
+ * - Hämta en användare baserat på GitHub ID
+ * - Hämta en användare baserat på e-post
+ * - Uppdatera en användare
+ * - Ta bort en användare
  */
 
 const User = require("../models/userModel");

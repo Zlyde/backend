@@ -1,5 +1,14 @@
 /**
  * src/data/invoices.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Hämta alla fakturor
+ * - Hämta en specifik faktura baserat på invoice_id
+ * - Hämta fakturor baserat på user_id
+ * - Skapa en ny faktura
+ * - Uppdatera en faktura
+ * - Markera en faktura som betald
  */
 
 const Invoice = require("../models/invoiceModel");

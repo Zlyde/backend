@@ -1,3 +1,15 @@
+/**
+ * src/routes/authRoutes.js
+ * Lager: "Routing Layer"
+ * 
+ * Rutter:  
+ * - GET /: Välkomstmeddelande
+ * - POST /register: Registrera en användare
+ * - POST /login: Logga in en användare
+ * - GET /github: Logga in med GitHub
+ * - GET /github/callback: Callback för GitHub-inloggning
+ */
+
 const router = require("express").Router();
 const auth = require("../services/authService");
 const passport = require("passport");

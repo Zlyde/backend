@@ -1,3 +1,13 @@
+/**
+ * src/services/authService.js
+ * Lager: "Service Layer"
+ * 
+ * Funktioner:
+ * - Registrera en användare
+ * - Logga in en användare
+ * - Logga in en användare med GitHub
+ */
+
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");

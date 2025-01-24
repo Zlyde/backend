@@ -1,5 +1,12 @@
 /**
  * src/routes/userRoutes.js
+ * Lager: "Routing Layer"
+ * 
+ * Rutter:
+ * - GET /: Hämta alla användare
+ * - GET /:id: Hämta en specifik användare
+ * - PUT /:id: Uppdatera en användare
+ * - DELETE /:id: Ta bort en användare
  */
 
 const express = require("express");

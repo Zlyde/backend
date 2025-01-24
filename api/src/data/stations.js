@@ -1,5 +1,14 @@
 /**
  * src/data/stations.js
+ * Lager: "Data Layer"
+ * 
+ * Funktioner:
+ * - Hämta alla laddstationer
+ * - Hämta en specifik laddstation
+ * - Lägg till en ny laddstation
+ * - Uppdatera en laddstation
+ * - Ta bort en laddstation
+ * - Hämta cyklar på specifik laddstation
  */
 
 const ChargingStation = require("../models/stationModel");
