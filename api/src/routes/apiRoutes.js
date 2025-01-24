@@ -51,7 +51,7 @@ router.get("/", (req, res) => {
     },
   };
 
-  res.status(200).send(JSON.stringify(response, null, 2));
+  res.status(200).json(response);
 });
 
 module.exports = router;
