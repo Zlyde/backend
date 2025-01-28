@@ -28,6 +28,7 @@ const initSocket = (server) => {
 
     socket.on("bike-update", (bike) => {
       io.emit("update-bike", bike);
+      // console.log(bike)
     });
 
     socket.on("disconnect", () => {

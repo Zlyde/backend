@@ -31,8 +31,6 @@ const bikeSchema = new mongoose.Schema(
     battery_level: {
       type: Number,
       default: 100, // Defaultvärde
-      min: [0, "Battery level cannot be less than 0"], // Minimumvärde
-      max: [100, "Battery level cannot be more than 100"], // Maximumvärde
     },
     last_service_date: Date,
     message: {
@@ -41,8 +39,7 @@ const bikeSchema = new mongoose.Schema(
     speed: {
       type: Number,
       default: 0,
-      min: 0,
-      max: 20,
+
     },
   },
   { timestamps: true },
@@ -53,5 +50,15 @@ bikeSchema.plugin(autoIncrement, { inc_field: "bike_id" });
 
 // Index för geografisk sökning
 bikeSchema.index({ location: "2dsphere" });
+
+bikeSchema.pre("save", function (next) {
+  // Clamp battery_level between 0 and 100
+  this.battery_level = Math.max(0, Math.min(this.battery_level, 100));
+
+  // Clamp speed between 0 and 20
+  this.speed = Math.max(0, Math.min(this.speed, 20));
+
+  next();
+});
 
 module.exports = mongoose.model("Bike", bikeSchema);

@@ -13,8 +13,6 @@
 const express = require("express");
 const router = express.Router();
 const bikeService = require("../services/bikeService");
-const { io } = require("socket.io-client");
-const socket = io("http://localhost:5001");
 
 // GET: Hämta alla cyklar
 router.get("/", async (req, res) => {

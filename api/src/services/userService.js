@@ -21,6 +21,17 @@ const getAllUsers = async () => {
   return users;
 };
 
+const addUser = async (user) => {
+  try {
+    const newUser = await userData.addUser(user);
+    console.log(`User with ID ${newUser.user_id} successfully added.`);
+    return newUser;
+  } catch (error) {
+    console.error("Error adding bike:", error.message);
+    throw error;
+  }
+};
+
 // Hämta en specifik användare
 const getUserById = async (id) => {
   const user = await userData.getUserById(id);
@@ -107,4 +118,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  addUser
 };
