@@ -1,7 +1,18 @@
+checks:
+    javascript: true
+
 build:
     nodes:
+        my-tests:
+            environment:
+                node:
+                    version: 16
         analysis:
             project_setup:
-                override: true
+                override:
+                    - npm install
             tests:
-                override: [js-scrutinizer-run]
+                override:
+                    #- npm run lint # Ensure lint script targets JSX
+                    #- npm run test # If applicable
+                    - js-scrutinizer-run # Analyze with Scrutinizer
