@@ -11,6 +11,11 @@
  */
 
 const bikeData = require("../data/bikes");
+const { io } = require("socket.io-client");
+
+const socket = io("http://localhost:5001", {
+  transports: ["websocket"],
+});
 
 
 // Hämta alla cyklar
@@ -58,34 +63,35 @@ const addBike = async (bike) => {
 // Uppdatera en cykel baserat på ID
 const updateBike = async (id, updateData) => {
   try {
-    // Validera status, om det anges
-    if (updateData.status) {
-      const validStatuses = ["available", "in-use", "charging", "maintenance"];
-      if (!validStatuses.includes(updateData.status)) {
-        throw new Error(
-          `Invalid status: ${updateData.status}. Valid statuses are: ${validStatuses.join(", ")}`,
-        );
+    const bike = await bikeData.updateBike(id, updateData)
+    if(!bike) return null
+    if (bike.status == 'in-use') {
+      bike.speed += (Math.random() - 0.5) * 1;
+      if (bike.speed < 0) bike.speed = 0;
+      if (bike.speed > 20) bike.speed = 20;
+      const dischargeRate = Math.min(0.25 + bike.speed * 0.02, 1);
+      bike.battery_level -= dischargeRate
+
+      if (bike.battery_level <= 20) {
+        bike.message = 'Cykeln måste laddas';
+      } else {
+        bike.message = ''
       }
+
+      await bikeData.updateBike(id, { battery_level: bike.battery_level, speed: bike.speed, message: bike.message });
     }
 
-    // Validera batterinivå, om det anges
-    if (updateData.battery_level !== undefined) {
-      if (updateData.battery_level < 0 || updateData.battery_level > 100) {
-        throw new Error("Battery level must be between 0 and 100.");
-      }
-    }
+    if (bike.battery_level <= 0) {
+      bike.battery_level = 0
+      bike.status = 'maintenance'
+      bike.speed = 0;
+      bike.message = 'Cykeln måste laddas'
 
-    // Validera koordinater, om det anges
-    if (
-      updateData.location &&
-      (!Array.isArray(updateData.location.coordinates) ||
-        updateData.location.coordinates.length !== 2)
-    ) {
-      throw new Error(
-        "Location coordinates must be an array with two numbers (longitude, latitude).",
-      );
-    }
-    return await bikeData.updateBike(id, updatedData);
+      await bikeData.updateBike(id, { battery_level: bike.battery_level, speed: bike.speed, message: bike.message, status: bike.status });
+    } 
+
+    socket.emit("bike-update", (bike));
+    return bike
   } catch (error) {
     console.error(`Error updating bike with ID ${id}:`, error.message);
     throw error;

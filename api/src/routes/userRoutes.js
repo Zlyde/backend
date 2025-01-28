@@ -23,6 +23,15 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  try {
+    const newUser = await userService.addUser(req.body);
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // GET: Hämta en specifik användare
 router.get("/:id", async (req, res) => {
   try {

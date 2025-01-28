@@ -23,6 +23,16 @@ const getAllUsers = async () => {
   }
 };
 
+const addUser = async (userData) => {
+  try {
+    const newUser = new User(userData);
+    return await newUser.save();
+  } catch (error) {
+    console.error("Error adding bike:", error.message);
+    throw new Error(error.message);
+  }
+};
+
 // Hämta en specifik användare baserat på userID
 const getUserById = async (id) => {
   try {
@@ -52,6 +62,18 @@ const getUserByEmail = async (email) => {
     return await User.findOne({ email }); // Returnerar null om ingen match
   } catch (error) {
     console.error(`Error fetching user by email ${email}:`, error.message);
+    throw new Error(error.message);
+  }
+};
+
+const deleteUsersWithoutName = async () => {
+  try {
+    // Hitta och ta bort användare utan namn
+    const result = await User.deleteMany({ name: { $in: [null, ""] } });
+    console.log(`${result.deletedCount} users deleted without a name.`);
+    return result;
+  } catch (error) {
+    console.error("Error deleting users without a name:", error.message);
     throw new Error(error.message);
   }
 };
@@ -92,4 +114,14 @@ module.exports = {
   getUserByEmail,
   updateUser,
   deleteUser,
+  addUser,
+  deleteUsersWithoutName
 };
+
+deleteUsersWithoutName()
+  .then(result => {
+    console.log(result);
+  })
+  .catch(error => {
+    console.error("Error:", error.message);
+  });
